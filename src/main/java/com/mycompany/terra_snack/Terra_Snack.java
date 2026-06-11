@@ -4,6 +4,9 @@
 
 package com.mycompany.terra_snack;
 
+import com.mycompany.terra_snack.database.DatabaseConnection;
+import java.sql.Connection;
+
 /**
  *
  * @author ftih_28
@@ -11,6 +14,14 @@ package com.mycompany.terra_snack;
 public class Terra_Snack {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+
+        Connection conn =
+                DatabaseConnection.getConnection();
+
+        if (conn != null) {
+            System.out.println("Database terhubung.");
+        } else {
+            System.out.println("Database tidak terhubung.");
+        }
     }
 }
