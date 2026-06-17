@@ -1,5 +1,5 @@
 com\mycompany\terra_snack\model\Produk.class
-com\mycompany\terra_snack\model\VarianProduk.class
 com\mycompany\terra_snack\dao\ProdukDAO.class
 com\mycompany\terra_snack\dao\PromoDAO.class
+com\mycompany\terra_snack\model\VarianProduk.class
 com\mycompany\terra_snack\model\Promo.class
