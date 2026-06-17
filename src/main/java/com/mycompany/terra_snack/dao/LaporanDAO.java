@@ -41,12 +41,20 @@ public class LaporanDAO {
         Map<String, Integer> data = new HashMap<>();
 
         try {
+<<<<<<< HEAD
             String sql =
                 "SELECT p.nama_produk, SUM(dp.qty) AS total " +
                 "FROM detail_pesanan dp " +
                 "JOIN produk p ON dp.produk_id = p.produk_id " +
                 "GROUP BY p.nama_produk " +
                 "ORDER BY total DESC";
+=======
+            String sql = "SELECT p.nama_produk, SUM(dp.qty) AS total " +
+                    "FROM detail_pesanan dp " +
+                    "JOIN produk p ON dp.produk_id = p.produk_id " +
+                    "GROUP BY p.nama_produk " +
+                    "ORDER BY total DESC";
+>>>>>>> 37368ef6facce84a975306f63364a0d1422e2cce
 
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -69,16 +77,25 @@ public class LaporanDAO {
         List<String> list = new ArrayList<>();
 
         try {
+<<<<<<< HEAD
             String sql =
                 "SELECT tanggal_pesanan, total_harga FROM pesanan";
+=======
+            String sql = "SELECT tanggal_pesanan, total_harga FROM pesanan";
+>>>>>>> 37368ef6facce84a975306f63364a0d1422e2cce
 
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
+<<<<<<< HEAD
                 String data =
                     rs.getTimestamp("tanggal_pesanan") +
                     " | Rp" + rs.getDouble("total_harga");
+=======
+                String data = rs.getTimestamp("tanggal_pesanan") +
+                        " | Rp" + rs.getDouble("total_harga");
+>>>>>>> 37368ef6facce84a975306f63364a0d1422e2cce
 
                 list.add(data);
             }
@@ -89,4 +106,64 @@ public class LaporanDAO {
 
         return list;
     }
+<<<<<<< HEAD
+=======
+
+    public Map<String, Double> getPenjualanPerHari() {
+
+        Map<String, Double> data = new HashMap<>();
+
+        try {
+
+            String sql = "SELECT DATE(tanggal_pesanan) AS tanggal, " +
+                    "SUM(total_harga) AS total " +
+                    "FROM pesanan " +
+                    "GROUP BY DATE(tanggal_pesanan) " +
+                    "ORDER BY tanggal";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                data.put(
+                        rs.getString("tanggal"),
+                        rs.getDouble("total"));
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return data;
+    }
+
+    public Map<String, Integer> getJumlahPesananPerStatus() {
+
+        Map<String, Integer> data = new HashMap<>();
+
+        try {
+
+            String sql = "SELECT status_pesanan, COUNT(*) total " +
+                    "FROM pesanan " +
+                    "GROUP BY status_pesanan";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                data.put(
+                        rs.getString("status_pesanan"),
+                        rs.getInt("total"));
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return data;
+    }
+>>>>>>> 37368ef6facce84a975306f63364a0d1422e2cce
 }

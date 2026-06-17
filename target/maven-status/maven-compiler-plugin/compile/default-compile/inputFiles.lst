@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C:\Folder Kampus\Project Tubes\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\dao\LaporanDAO.java
 C:\Folder Kampus\Project Tubes\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\dao\PembayaranDAO.java
 C:\Folder Kampus\Project Tubes\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\dao\PesananDAO.java
@@ -22,3 +23,29 @@ C:\Folder Kampus\Project Tubes\TerraSnackPBO\src\main\java\com\mycompany\terra_s
 C:\Folder Kampus\Project Tubes\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\LoginForm.java
 C:\Folder Kampus\Project Tubes\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\PelangganForm.java
 C:\Folder Kampus\Project Tubes\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\PesananForm.java
+=======
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\dao\LaporanDAO.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\dao\PembayaranDAO.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\dao\PesananDAO.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\dao\ProdukDAO.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\dao\PromoDAO.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\dao\UserDAO.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\database\DatabaseConnection.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\model\EventBazar.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\model\Pelanggan.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\model\Pembayaran.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\model\Pesanan.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\model\Produk.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\model\Promo.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\model\User.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\model\VarianProduk.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\services\AuthServices.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\services\OrderService.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\services\ReportService.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\Terra_Snack.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\DashboardAdmin.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\DashboardStaff.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\EventBazarFormFrame.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\LaporanPenjualanFormFrame.java
+D:\TUGAS\Semester 2\PBO Smt2\TUGAS BESAR\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\LoginForm.java
+>>>>>>> 37368ef6facce84a975306f63364a0d1422e2cce
