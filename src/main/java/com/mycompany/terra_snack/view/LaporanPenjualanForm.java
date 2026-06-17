@@ -19,6 +19,7 @@ public class LaporanPenjualanForm extends JFrame {
         setLayout(new BorderLayout());
 
         service = new ReportService();
+        
         area = new JTextArea();
 
         loadData();
