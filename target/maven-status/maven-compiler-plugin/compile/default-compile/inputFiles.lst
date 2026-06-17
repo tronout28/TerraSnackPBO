@@ -17,8 +17,15 @@ C:\Users\ASUS\OneDrive\Documents\NetBeansProjects\TerraSnackPBO\src\main\java\co
 C:\Users\ASUS\OneDrive\Documents\NetBeansProjects\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\services\OrderService.java
 C:\Users\ASUS\OneDrive\Documents\NetBeansProjects\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\services\ReportService.java
 C:\Users\ASUS\OneDrive\Documents\NetBeansProjects\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\Terra_Snack.java
+C:\Users\ASUS\OneDrive\Documents\NetBeansProjects\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\DashboardAdmin.java
+C:\Users\ASUS\OneDrive\Documents\NetBeansProjects\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\DashboardStaff.java
+C:\Users\ASUS\OneDrive\Documents\NetBeansProjects\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\DetailPesananForm.java
 C:\Users\ASUS\OneDrive\Documents\NetBeansProjects\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\EventBazarForm.java
+C:\Users\ASUS\OneDrive\Documents\NetBeansProjects\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\EventBazarFormFrame.java
 C:\Users\ASUS\OneDrive\Documents\NetBeansProjects\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\FormUploadPembayaran.java
 C:\Users\ASUS\OneDrive\Documents\NetBeansProjects\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\LaporanPenjualanForm.java
+C:\Users\ASUS\OneDrive\Documents\NetBeansProjects\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\LaporanPenjualanFormFrame.java
 C:\Users\ASUS\OneDrive\Documents\NetBeansProjects\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\LoginForm.java
+C:\Users\ASUS\OneDrive\Documents\NetBeansProjects\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\PelangganForm.java
+C:\Users\ASUS\OneDrive\Documents\NetBeansProjects\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\PesananForm.java
 C:\Users\ASUS\OneDrive\Documents\NetBeansProjects\TerraSnackPBO\src\main\java\com\mycompany\terra_snack\view\TrackingPesananForm.java

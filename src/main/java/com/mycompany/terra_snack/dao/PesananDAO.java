@@ -17,7 +17,7 @@ import com.mycompany.terra_snack.model.Pesanan;
 
 /**
  *
- * @author 
+ * @author Tannn939
  */
 public class PesananDAO {
 
@@ -34,7 +34,7 @@ public class PesananDAO {
                      conn.prepareStatement(sql)) {
 
             ps.setInt(1, pesanan.getPelangganId());
-            ps.setString(2, pesanan.getTanggalPesanan());
+            ps.setTimestamp(2, pesanan.getTanggalPesanan());
             ps.setString(3, pesanan.getStatusPesanan());
 
             return ps.executeUpdate() > 0;
@@ -66,7 +66,7 @@ public class PesananDAO {
 
                 pesanan.setPesananId(rs.getInt("pesanan_id"));
                 pesanan.setPelangganId(rs.getInt("pelanggan_id"));
-                pesanan.setTanggalPesanan(rs.getString("tanggal_pesanan"));
+                pesanan.setTanggalPesanan(rs.getTimestamp("tanggal_pesanan"));
                 pesanan.setStatusPesanan(rs.getString("status_pesanan"));
 
                 list.add(pesanan);
@@ -100,7 +100,7 @@ public class PesananDAO {
 
                 pesanan.setPesananId(rs.getInt("pesanan_id"));
                 pesanan.setPelangganId(rs.getInt("pelanggan_id"));
-                pesanan.setTanggalPesanan(rs.getString("tanggal_pesanan"));
+                pesanan.setTanggalPesanan(rs.getTimestamp("tanggal_pesanan"));
                 pesanan.setStatusPesanan(rs.getString("status_pesanan"));
 
                 return pesanan;
@@ -129,7 +129,7 @@ public class PesananDAO {
                      conn.prepareStatement(sql)) {
 
             ps.setInt(1, pesanan.getPelangganId());
-            ps.setString(2, pesanan.getTanggalPesanan());
+            ps.setTimestamp(2, pesanan.getTanggalPesanan());
             ps.setString(3, pesanan.getStatusPesanan());
             ps.setInt(4, pesanan.getPesananId());
 
