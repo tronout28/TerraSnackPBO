@@ -41,20 +41,11 @@ public class LaporanDAO {
         Map<String, Integer> data = new HashMap<>();
 
         try {
-<<<<<<< HEAD
-            String sql =
-                "SELECT p.nama_produk, SUM(dp.qty) AS total " +
-                "FROM detail_pesanan dp " +
-                "JOIN produk p ON dp.produk_id = p.produk_id " +
-                "GROUP BY p.nama_produk " +
-                "ORDER BY total DESC";
-=======
             String sql = "SELECT p.nama_produk, SUM(dp.qty) AS total " +
                     "FROM detail_pesanan dp " +
                     "JOIN produk p ON dp.produk_id = p.produk_id " +
                     "GROUP BY p.nama_produk " +
                     "ORDER BY total DESC";
->>>>>>> 37368ef6facce84a975306f63364a0d1422e2cce
 
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -77,25 +68,14 @@ public class LaporanDAO {
         List<String> list = new ArrayList<>();
 
         try {
-<<<<<<< HEAD
-            String sql =
-                "SELECT tanggal_pesanan, total_harga FROM pesanan";
-=======
             String sql = "SELECT tanggal_pesanan, total_harga FROM pesanan";
->>>>>>> 37368ef6facce84a975306f63364a0d1422e2cce
 
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-<<<<<<< HEAD
-                String data =
-                    rs.getTimestamp("tanggal_pesanan") +
-                    " | Rp" + rs.getDouble("total_harga");
-=======
                 String data = rs.getTimestamp("tanggal_pesanan") +
                         " | Rp" + rs.getDouble("total_harga");
->>>>>>> 37368ef6facce84a975306f63364a0d1422e2cce
 
                 list.add(data);
             }
@@ -106,8 +86,6 @@ public class LaporanDAO {
 
         return list;
     }
-<<<<<<< HEAD
-=======
 
     public Map<String, Double> getPenjualanPerHari() {
 
@@ -165,5 +143,4 @@ public class LaporanDAO {
 
         return data;
     }
->>>>>>> 37368ef6facce84a975306f63364a0d1422e2cce
 }
