@@ -121,6 +121,9 @@
           </StringArray>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JProdukActionPerformed"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
@@ -136,6 +139,9 @@
           </StringArray>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JParianActionPerformed"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
@@ -144,16 +150,25 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="jTextField1"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JQtyActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="JHargasatuan">
       <Properties>
         <Property name="text" type="java.lang.String" value="jTextField2"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JHargasatuanActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="JSubtotal">
       <Properties>
         <Property name="text" type="java.lang.String" value="jTextField3"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JSubtotalActionPerformed"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
       <AuxValues>
@@ -211,6 +226,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Tambah Detail"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JTambahActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="JUpdate">
       <Properties>
@@ -222,6 +240,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Update Detail"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JUpdateActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="JHapus">
       <Properties>
@@ -233,6 +254,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Hapus Detail"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JHapusActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="JRefresh">
       <Properties>
@@ -244,6 +268,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Refresh"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="JRefreshActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
