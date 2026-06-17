@@ -218,11 +218,12 @@ public class LoginForm extends javax.swing.JFrame {
 
                 } else if (role.equalsIgnoreCase("ADMIN")) {
 
-                    JOptionPane.showMessageDialog(
-                            this,
-                            "Login berhasil sebagai ADMIN.\nDashboard Admin belum dibuat.",
-                            "Informasi",
-                            JOptionPane.INFORMATION_MESSAGE);
+                    DashboardAdmin admin = new DashboardAdmin();
+
+                    admin.setLocationRelativeTo(null);
+                    admin.setVisible(true);
+
+                    dispose();
 
                 } else {
 
