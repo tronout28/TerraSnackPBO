@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.table.DefaultTableModel;
 
 import com.mycompany.terra_snack.database.DatabaseConnection;
 
@@ -36,6 +37,54 @@ public class LaporanDAO {
 
         return total;
     }
+
+    public List<Object[]> getLaporanPenjualanByTanggal(
+        String mulaiTanggal,
+        String sampaiTanggal) {
+
+    List<Object[]> list = new ArrayList<>();
+
+    try {
+
+        String sql =
+                "SELECT p.nama_produk, " +
+                "SUM(dp.qty) AS jumlah_penjualan, " +
+                "dp.harga_satuan, " +
+                "SUM(dp.subtotal) AS total " +
+                "FROM detail_pesanan dp " +
+                "JOIN produk p ON dp.produk_id = p.produk_id " +
+                "JOIN pesanan ps ON dp.pesanan_id = ps.pesanan_id " +
+                "WHERE DATE(ps.tanggal_pesanan) BETWEEN ? AND ? " +
+                "GROUP BY p.nama_produk, dp.harga_satuan " +
+                "ORDER BY jumlah_penjualan DESC";
+
+        PreparedStatement ps = conn.prepareStatement(sql);
+
+        ps.setString(1, mulaiTanggal);
+        ps.setString(2, sampaiTanggal);
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+
+            Object[] row = {
+                rs.getString("nama_produk"),
+                rs.getInt("jumlah_penjualan"),
+                rs.getDouble("harga_satuan"),
+                rs.getDouble("total")
+            };
+
+            list.add(row);
+        }
+
+    } catch (Exception e) {
+        System.out.println(
+                "Error laporan penjualan: "
+                + e.getMessage());
+    }
+
+    return list;
+}
 
     public Map<String, Integer> getProdukTerlaris() {
         Map<String, Integer> data = new HashMap<>();
