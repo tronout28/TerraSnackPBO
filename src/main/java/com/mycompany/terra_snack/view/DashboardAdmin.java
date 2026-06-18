@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import org.jfree.chart.ChartFactory;
@@ -48,12 +49,10 @@ public class DashboardAdmin extends javax.swing.JFrame {
     public DashboardAdmin() {
         initComponents();
 
-        java.awt.EventQueue.invokeLater(() -> {
         loadDashboard();
         loadTanggalJam();
         loadGrafikPenjualan();
         loadGrafikProdukTerlaris();
-    });
     }
 
     /**
@@ -249,10 +248,20 @@ public class DashboardAdmin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        btnDashboard = new javax.swing.JButton();
+        btnPesanan = new javax.swing.JButton();
+        btnProduk = new javax.swing.JButton();
+        btnLaporan = new javax.swing.JButton();
+        btnPengguna = new javax.swing.JButton();
+        btnVerivikasi = new javax.swing.JButton();
+        btnEvent = new javax.swing.JButton();
+        btnTracking = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         txtTotalPesanan = new javax.swing.JLabel();
@@ -290,14 +299,118 @@ public class DashboardAdmin extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(11, 45, 107));
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setText("Terra Snack");
+
+        btnDashboard.setBackground(new java.awt.Color(11, 45, 107));
+        btnDashboard.setForeground(new java.awt.Color(255, 255, 255));
+        btnDashboard.setText("Dashboard");
+        btnDashboard.setBorderPainted(false);
+        btnDashboard.setFocusPainted(false);
+        btnDashboard.addActionListener(this::btnDashboardActionPerformed);
+
+        btnPesanan.setBackground(new java.awt.Color(11, 45, 107));
+        btnPesanan.setForeground(new java.awt.Color(255, 255, 255));
+        btnPesanan.setText("Pesanan");
+        btnPesanan.setBorderPainted(false);
+        btnPesanan.setFocusPainted(false);
+        btnPesanan.addActionListener(this::btnPesananActionPerformed);
+
+        btnProduk.setBackground(new java.awt.Color(11, 45, 107));
+        btnProduk.setForeground(new java.awt.Color(255, 255, 255));
+        btnProduk.setText("Produk");
+        btnProduk.setBorderPainted(false);
+        btnProduk.setFocusPainted(false);
+        btnProduk.addActionListener(this::btnProdukActionPerformed);
+
+        btnLaporan.setBackground(new java.awt.Color(11, 45, 107));
+        btnLaporan.setForeground(new java.awt.Color(255, 255, 255));
+        btnLaporan.setText("Laporan");
+        btnLaporan.setBorderPainted(false);
+        btnLaporan.setFocusPainted(false);
+        btnLaporan.addActionListener(this::btnLaporanActionPerformed);
+
+        btnPengguna.setBackground(new java.awt.Color(11, 45, 107));
+        btnPengguna.setForeground(new java.awt.Color(255, 255, 255));
+        btnPengguna.setText("Pengguna");
+        btnPengguna.setBorderPainted(false);
+        btnPengguna.setFocusPainted(false);
+        btnPengguna.addActionListener(this::btnPenggunaActionPerformed);
+
+        btnVerivikasi.setBackground(new java.awt.Color(11, 45, 107));
+        btnVerivikasi.setForeground(new java.awt.Color(255, 255, 255));
+        btnVerivikasi.setText("Verifikasi ");
+        btnVerivikasi.setBorderPainted(false);
+        btnVerivikasi.setFocusPainted(false);
+        btnVerivikasi.addActionListener(this::btnVerivikasiActionPerformed);
+
+        btnEvent.setBackground(new java.awt.Color(11, 45, 107));
+        btnEvent.setForeground(new java.awt.Color(255, 255, 255));
+        btnEvent.setText("Event");
+        btnEvent.setBorderPainted(false);
+        btnEvent.setFocusPainted(false);
+        btnEvent.addActionListener(this::btnEventActionPerformed);
+
+        btnTracking.setBackground(new java.awt.Color(11, 45, 107));
+        btnTracking.setForeground(new java.awt.Color(255, 255, 255));
+        btnTracking.setText("Tracking");
+        btnTracking.setBorderPainted(false);
+        btnTracking.setFocusPainted(false);
+        btnTracking.addActionListener(this::btnTrackingActionPerformed);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 157, Short.MAX_VALUE));
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addContainerGap(19, Short.MAX_VALUE)
+                                .addComponent(jLabel12)
+                                .addContainerGap())
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(36, 36, 36)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnTracking, javax.swing.GroupLayout.PREFERRED_SIZE, 75,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(jPanel1Layout
+                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(btnEvent, javax.swing.GroupLayout.PREFERRED_SIZE, 75,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(btnLaporan, javax.swing.GroupLayout.PREFERRED_SIZE, 75,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(btnProduk, javax.swing.GroupLayout.PREFERRED_SIZE, 75,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(btnPesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 75,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(btnDashboard, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(btnPengguna, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(btnVerivikasi, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
         jPanel1Layout.setVerticalGroup(
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 0, Short.MAX_VALUE));
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(44, 44, 44)
+                                .addComponent(jLabel12)
+                                .addGap(79, 79, 79)
+                                .addComponent(btnDashboard)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnPesanan)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnProduk)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnLaporan)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnPengguna)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnVerivikasi)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnEvent)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnTracking)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -774,6 +887,72 @@ public class DashboardAdmin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnPesananActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnPesananActionPerformed
+        PesananForm form = new PesananForm();
+        form.setVisible(true);
+        form.setLocationRelativeTo(null);
+        this.dispose();
+    }// GEN-LAST:event_btnPesananActionPerformed
+
+    private void btnDashboardActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnDashboardActionPerformed
+        DashboardAdmin dashboard = new DashboardAdmin();
+        dashboard.setVisible(true);
+        dashboard.setLocationRelativeTo(null);
+        this.dispose();
+    }// GEN-LAST:event_btnDashboardActionPerformed
+
+    private void btnProdukActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnProdukActionPerformed
+        JOptionPane.showMessageDialog(
+                this,
+                "Form Produk belum tersedia.",
+                "Informasi",
+                JOptionPane.INFORMATION_MESSAGE);
+        // ProdukForm form = new ProdukForm();
+        // form.setVisible(true);
+        // form.setLocationRelativeTo(null);
+        // this.dispose();
+    }// GEN-LAST:event_btnProdukActionPerformed
+
+    private void btnLaporanActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnLaporanActionPerformed
+        // TODO add your handling code here:
+        LaporanPenjualanFormFrame form = new LaporanPenjualanFormFrame();
+        form.setVisible(true);
+        form.setLocationRelativeTo(null);
+        this.dispose();
+    }// GEN-LAST:event_btnLaporanActionPerformed
+
+    private void btnPenggunaActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnPenggunaActionPerformed
+        // TODO add your handling code here:
+        PelangganForm form = new PelangganForm();
+        form.setVisible(true);
+        form.setLocationRelativeTo(null);
+        this.dispose();
+    }// GEN-LAST:event_btnPenggunaActionPerformed
+
+    private void btnVerivikasiActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnVerivikasiActionPerformed
+        // TODO add your handling code here:
+        FormUploadPembayaran form = new FormUploadPembayaran();
+        form.setVisible(true);
+        form.setLocationRelativeTo(null);
+        this.dispose();
+    }// GEN-LAST:event_btnVerivikasiActionPerformed
+
+    private void btnEventActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnEventActionPerformed
+        // TODO add your handling code here:
+        EventBazarFormFrame form = new EventBazarFormFrame();
+        form.setVisible(true);
+        form.setLocationRelativeTo(null);
+        this.dispose();
+    }// GEN-LAST:event_btnEventActionPerformed
+
+    private void btnTrackingActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnTrackingActionPerformed
+        // TODO add your handling code here:
+        TrackingPesananForm form = new TrackingPesananForm();
+        form.setVisible(true);
+        form.setLocationRelativeTo(null);
+        this.dispose();
+    }// GEN-LAST:event_btnTrackingActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -804,9 +983,18 @@ public class DashboardAdmin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDashboard;
+    private javax.swing.JButton btnEvent;
+    private javax.swing.JButton btnLaporan;
+    private javax.swing.JButton btnPengguna;
+    private javax.swing.JButton btnPesanan;
+    private javax.swing.JButton btnProduk;
+    private javax.swing.JButton btnTracking;
+    private javax.swing.JButton btnVerivikasi;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
