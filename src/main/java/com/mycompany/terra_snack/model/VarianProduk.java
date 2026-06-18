@@ -16,11 +16,11 @@ public class VarianProduk {
     private int stokVarian;
 
     public VarianProduk() {
-
     }
 
     public VarianProduk(int varianId, int produkId,
-            String namaVarian, int stokVarian) {
+                        String namaVarian, int stokVarian) {
+
         this.varianId = varianId;
         this.produkId = produkId;
         this.namaVarian = namaVarian;
