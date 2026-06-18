@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 com\mycompany\terra_snack\view\ProdukForm$8.class
 com\mycompany\terra_snack\view\PromoForm$6.class
 com\mycompany\terra_snack\view\PromoForm.class
@@ -29,3 +30,10 @@ com\mycompany\terra_snack\view\VarianForm$3.class
 com\mycompany\terra_snack\view\VarianForm$8.class
 com\mycompany\terra_snack\view\ProdukForm$3.class
 com\mycompany\terra_snack\view\PromoForm$3.class
+=======
+com\mycompany\terra_snack\model\Produk.class
+com\mycompany\terra_snack\dao\ProdukDAO.class
+com\mycompany\terra_snack\model\Promo.class
+com\mycompany\terra_snack\dao\PromoDAO.class
+com\mycompany\terra_snack\model\VarianProduk.class
+>>>>>>> e255fd5ea5af0527288b86b52ec74349be95f51a
