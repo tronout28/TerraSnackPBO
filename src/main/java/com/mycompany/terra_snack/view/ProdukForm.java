@@ -23,12 +23,9 @@ public class ProdukForm extends javax.swing.JFrame {
         initComponents();
         loadDataToTable();
         jPanel3.setBackground(new java.awt.Color(11, 45, 107));
-        btnMenuProduk.setBackground(new java.awt.Color(37, 99, 235));
-        btnMenuProduk.setForeground(java.awt.Color.WHITE);
-        btnMenuVarian.setBackground(new java.awt.Color(11, 45, 107));
-        btnMenuVarian.setForeground(java.awt.Color.WHITE);
-        btnMenuPromo.setBackground(new java.awt.Color(11, 45, 107));
-        btnMenuPromo.setForeground(java.awt.Color.WHITE);
+        btnDashboard.setBackground(new java.awt.Color(37, 99, 235));
+        btnDashboard.setForeground(java.awt.Color.WHITE);
+        
     }
 
     private void loadDataToTable() {
@@ -73,9 +70,9 @@ public class ProdukForm extends javax.swing.JFrame {
         tfCari = new javax.swing.JTextField();
         btnCari = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        btnMenuPromo = new javax.swing.JButton();
-        btnMenuVarian = new javax.swing.JButton();
-        btnMenuProduk = new javax.swing.JButton();
+        btnDashboard = new javax.swing.JButton();
+        btnSubVarian = new javax.swing.JButton();
+        btnSubPromo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -208,35 +205,32 @@ public class ProdukForm extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(57, 57, 57)
+                                .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(108, 108, 108)
+                                .addComponent(jLabel7))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addGap(57, 57, 57)
-                                        .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(108, 108, 108)
-                                        .addComponent(jLabel7))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel5)
-                                            .addComponent(jLabel6)
-                                            .addComponent(jLabel4)
-                                            .addComponent(jLabel3)
-                                            .addComponent(jLabel2))
-                                        .addGap(34, 34, 34)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(tfHarga)
-                                            .addComponent(tfNama)
-                                            .addComponent(tfStok)
-                                            .addComponent(tfMinOrder)
-                                            .addComponent(cbStatus, 0, 100, Short.MAX_VALUE))))
-                                .addGap(18, 18, 18)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel2))
+                                .addGap(34, 34, 34)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(tfCari)
-                                    .addComponent(btnCari, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
-                                .addGap(0, 21, Short.MAX_VALUE)))
-                        .addContainerGap())))
+                                    .addComponent(tfHarga)
+                                    .addComponent(tfNama)
+                                    .addComponent(tfStok)
+                                    .addComponent(tfMinOrder)
+                                    .addComponent(cbStatus, 0, 100, Short.MAX_VALUE))))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tfCari)
+                            .addComponent(btnCari, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
+                        .addContainerGap(27, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -274,41 +268,58 @@ public class ProdukForm extends javax.swing.JFrame {
                     .addComponent(btnEdit)
                     .addComponent(btnHapus)
                     .addComponent(btnRefresh))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(8, 45, 91));
         jPanel3.setPreferredSize(new java.awt.Dimension(131, 0));
 
-        btnMenuPromo.setText("Promo & Diskon");
+        btnDashboard.setText("Dashboard");
+        btnDashboard.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDashboardActionPerformed(evt);
+            }
+        });
 
-        btnMenuVarian.setText("Varian Produk");
+        btnSubVarian.setText("Varian Produk");
+        btnSubVarian.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSubVarianActionPerformed(evt);
+            }
+        });
 
-        btnMenuProduk.setText("Produk Utama");
+        btnSubPromo.setText("Promo Diskon");
+        btnSubPromo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSubPromoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnMenuPromo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnMenuProduk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnMenuVarian, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnDashboard, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnSubVarian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnSubPromo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(81, 81, 81)
-                .addComponent(btnMenuProduk)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnMenuVarian)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnMenuPromo)
+                .addComponent(btnDashboard)
+                .addGap(18, 18, 18)
+                .addComponent(btnSubVarian)
+                .addGap(18, 18, 18)
+                .addComponent(btnSubPromo)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -327,8 +338,10 @@ public class ProdukForm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
         pack();
@@ -456,6 +469,27 @@ public class ProdukForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tblProdukMouseClicked
 
+    private void btnDashboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDashboardActionPerformed
+        DashboardAdmin dashboard = new DashboardAdmin();
+        dashboard.setVisible(true);
+        dashboard.setLocationRelativeTo(null);
+        this.dispose();
+    }//GEN-LAST:event_btnDashboardActionPerformed
+
+    private void btnSubVarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubVarianActionPerformed
+        VarianForm form = new VarianForm();
+        form.setVisible(true);
+        form.setLocationRelativeTo(null);
+        this.dispose();
+    }//GEN-LAST:event_btnSubVarianActionPerformed
+
+    private void btnSubPromoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubPromoActionPerformed
+        PromoForm form = new PromoForm();
+        form.setVisible(true);
+        form.setLocationRelativeTo(null);
+        this.dispose();
+    }//GEN-LAST:event_btnSubPromoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -494,12 +528,12 @@ public class ProdukForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCari;
+    private javax.swing.JButton btnDashboard;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnHapus;
-    private javax.swing.JButton btnMenuProduk;
-    private javax.swing.JButton btnMenuPromo;
-    private javax.swing.JButton btnMenuVarian;
     private javax.swing.JButton btnRefresh;
+    private javax.swing.JButton btnSubPromo;
+    private javax.swing.JButton btnSubVarian;
     private javax.swing.JButton btnTambah;
     private javax.swing.JComboBox<String> cbStatus;
     private javax.swing.JLabel jLabel1;
