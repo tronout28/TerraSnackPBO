@@ -19,6 +19,10 @@ public class Promo {
     private String tanggalSelesai;
     private String status;
 
+    public Promo(){
+        
+    }
+    
     public Promo(int promoId, String kodePromo, String namaPromo, String jenisDiskon, double nilaiDiskon, String tanggalMulai, String tanggalSelesai, String status) {
         this.promoId = promoId;
         this.kodePromo = kodePromo;
