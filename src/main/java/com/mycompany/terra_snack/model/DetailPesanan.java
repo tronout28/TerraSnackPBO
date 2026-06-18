@@ -19,6 +19,7 @@ public class DetailPesanan {
     private int qty;
     private BigDecimal hargaSatuan;
     private BigDecimal subtotal;
+    private String catatan;
 
     public DetailPesanan() {
     }
@@ -34,6 +35,7 @@ public class DetailPesanan {
         this.qty = qty;
         this.hargaSatuan = hargaSatuan;
         this.subtotal = subtotal;
+        this.catatan = catatan;
     }
 
     public int getDetailId() {
@@ -92,7 +94,13 @@ public class DetailPesanan {
         this.subtotal = subtotal;
     }
 
-    public Object getCatatan() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    
+
+     public String getCatatan() {
+        return catatan;
+    }
+
+    public void setCatatan(String catatan) {
+        this.catatan = catatan;
     }
 }
