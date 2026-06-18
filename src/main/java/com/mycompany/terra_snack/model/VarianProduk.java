@@ -15,19 +15,12 @@ public class VarianProduk {
     private String namaVarian;
     private int stokVarian;
 
-<<<<<<< HEAD
+
     public VarianProduk(){
         
     }
     
     public VarianProduk(int varianId, int produkId, String namaVarian, int stokVarian) {
-=======
-    public VarianProduk() {
-    }
-
-    public VarianProduk(int varianId, int produkId,
-                        String namaVarian, int stokVarian) {
->>>>>>> e255fd5ea5af0527288b86b52ec74349be95f51a
         this.varianId = varianId;
         this.produkId = produkId;
         this.namaVarian = namaVarian;
