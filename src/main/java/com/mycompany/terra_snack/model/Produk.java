@@ -18,6 +18,9 @@ public class Produk {
     private String statusProduk;
     private String gambarProduk;
 
+    public Produk() {
+    }
+
     public Produk(int produkId, String namaProduk, double harga, int stok, int minimalOrder, String statusProduk, String gambarProduk) {
         this.produkId = produkId;
         this.namaProduk = namaProduk;
