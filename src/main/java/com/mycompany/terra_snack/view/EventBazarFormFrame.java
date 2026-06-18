@@ -8,15 +8,46 @@ package com.mycompany.terra_snack.view;
  *
  * @author ADMIN
  */
+import com.mycompany.terra_snack.dao.EventBazarDAO;
+import com.mycompany.terra_snack.model.EventBazar;
+ 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+ 
+import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.DefaultTableModel;
+ 
+/**
+ *
+ * @author ADMIN
+ */
 public class EventBazarFormFrame extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(EventBazarFormFrame.class.getName());
-
+ 
+    // =========================================================================
+    // FIELD TAMBAHAN (aman di luar blok GEN-BEGIN/GEN-END, tidak akan
+    // ditimpa NetBeans walau form ini dibuka lagi di Design view)
+    // =========================================================================
+ 
+    /** DAO untuk akses tabel event_bazar di database */
+    private final EventBazarDAO eventBazarDAO = new EventBazarDAO();
+ 
+    /** Model tabel, dipasang manual agar tabel bisa dibuat read-only */
+    private DefaultTableModel modelEvent;
+ 
+    /** Format tanggal untuk validasi input & tampilan tabel (yyyy-MM-dd) */
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+ 
     /**
      * Creates new form LaporanPenjualanFormFrame
      */
     public EventBazarFormFrame() {
         initComponents();
+        initCustomComponents(); // <-- tambahan: setup tabel, load data, dll
     }
 
     /**
@@ -204,24 +235,313 @@ public class EventBazarFormFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void initCustomComponents() {
+        dateFormat.setLenient(false); // tolak tanggal yang "dipaksakan" valid
+ 
+        setupTable();
+        loadTableData();
+ 
+        // Klik baris tabel -> auto-isi field (memudahkan Edit/Hapus)
+        tblEventBazar.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+            if (e.getValueIsAdjusting()) {
+                return;
+            }
+            int selectedRow = tblEventBazar.getSelectedRow();
+            if (selectedRow >= 0 && selectedRow < modelEvent.getRowCount()) {
+                tfIdEvent.setText(String.valueOf(modelEvent.getValueAt(selectedRow, 0)));
+                tfNamaEvent.setText(String.valueOf(modelEvent.getValueAt(selectedRow, 1)));
+                tfLokasi.setText(String.valueOf(modelEvent.getValueAt(selectedRow, 2)));
+                tfTanggalEvent.setText(String.valueOf(modelEvent.getValueAt(selectedRow, 3)));
+            }
+        });
+ 
+        setLocationRelativeTo(null); // tampilkan form di tengah layar
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+    }
+ 
+    /**
+     * Mengganti model tabel bawaan GUI Builder dengan DefaultTableModel
+     * custom yang seluruh selnya tidak bisa diedit user.
+     */
+    private void setupTable() {
+ 
+        String[] kolom = {"ID EVENT", "NAMA EVENT", "LOKASI", "TANGGAL EVENT"};
+ 
+        modelEvent = new DefaultTableModel(kolom, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // semua kolom read-only
+            }
+        };
+ 
+        tblEventBazar.setModel(modelEvent);
+    }
+ 
+    /**
+     * Ambil seluruh data event_bazar dari database lewat EventBazarDAO,
+     * lalu tampilkan ke tblEventBazar.
+     */
+    private void loadTableData() {
+ 
+        modelEvent.setRowCount(0); // bersihkan isi tabel sebelum diisi ulang
+ 
+        List<EventBazar> daftarEvent = eventBazarDAO.getAllEvent();
+ 
+        for (EventBazar event : daftarEvent) {
+            modelEvent.addRow(new Object[]{
+                event.getIdEvent(),
+                event.getNamaEvent(),
+                event.getLokasi(),
+                dateFormat.format(event.getTanggalMulai())
+            });
+        }
+    }
+ 
+    /**
+     * Kosongkan semua field input.
+     */
+    private void clearFields() {
+        tfIdEvent.setText("");
+        tfNamaEvent.setText("");
+        tfLokasi.setText("");
+        tfTanggalEvent.setText("");
+    }
+ 
+    /**
+     * Validasi field Nama Event, Lokasi, dan Tanggal Event (dipakai
+     * bersama oleh Tambah & Edit). Mengembalikan tanggal hasil parsing,
+     * atau null kalau validasi gagal (pesan error sudah ditampilkan).
+     */
+    private Date validasiDanParseTanggal() {
+ 
+        String namaEvent = tfNamaEvent.getText().trim();
+        String lokasi = tfLokasi.getText().trim();
+        String tanggalStr = tfTanggalEvent.getText().trim();
+ 
+        if (namaEvent.isEmpty() || lokasi.isEmpty() || tanggalStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Nama Event, Lokasi, dan Tanggal Event tidak boleh kosong!",
+                    "Input Tidak Valid",
+                    JOptionPane.WARNING_MESSAGE);
+            return null;
+        }
+ 
+        try {
+            return dateFormat.parse(tanggalStr);
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Format Tanggal Event salah! Gunakan format: yyyy-MM-dd\nContoh: 2026-06-18",
+                    "Format Tanggal Salah",
+                    JOptionPane.WARNING_MESSAGE);
+            return null;
+        }
+    }
+ 
+    /**
+     * Tambah event bazar baru ke database.
+     */
+    private void tambahEvent() {
+ 
+        Date tanggalEvent = validasiDanParseTanggal();
+        if (tanggalEvent == null) {
+            return; // pesan error sudah ditampilkan di validasiDanParseTanggal()
+        }
+ 
+        EventBazar event = new EventBazar();
+        event.setNamaEvent(tfNamaEvent.getText().trim());
+        event.setLokasi(tfLokasi.getText().trim());
+        event.setTanggalMulai(tanggalEvent);
+ 
+        boolean berhasil = eventBazarDAO.insert(event);
+ 
+        if (berhasil) {
+            JOptionPane.showMessageDialog(this,
+                    "Event bazar berhasil ditambahkan!",
+                    "Berhasil",
+                    JOptionPane.INFORMATION_MESSAGE);
+            loadTableData();
+            clearFields();
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Gagal menambahkan event bazar. Periksa koneksi database Anda.",
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+ 
+    /**
+     * Update event bazar yang sudah ada (berdasarkan Id Event yang diisi).
+     */
+    private void editEvent() {
+ 
+        String idStr = tfIdEvent.getText().trim();
+ 
+        if (idStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Pilih dulu data yang ingin diedit (klik baris tabel, atau ketik Id Event lalu Enter).",
+                    "Input Tidak Valid",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+ 
+        int idEvent;
+        try {
+            idEvent = Integer.parseInt(idStr);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Id Event harus berupa angka!",
+                    "Input Tidak Valid",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+ 
+        Date tanggalEvent = validasiDanParseTanggal();
+        if (tanggalEvent == null) {
+            return;
+        }
+ 
+        EventBazar event = new EventBazar();
+        event.setIdEvent(idEvent);
+        event.setNamaEvent(tfNamaEvent.getText().trim());
+        event.setLokasi(tfLokasi.getText().trim());
+        event.setTanggalMulai(tanggalEvent);
+ 
+        boolean berhasil = eventBazarDAO.update(event);
+ 
+        if (berhasil) {
+            JOptionPane.showMessageDialog(this,
+                    "Event bazar berhasil diupdate!",
+                    "Berhasil",
+                    JOptionPane.INFORMATION_MESSAGE);
+            loadTableData();
+            clearFields();
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Gagal mengupdate event bazar. Pastikan Id Event tersebut ada.",
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+ 
+    /**
+     * Hapus event bazar berdasarkan Id Event yang diisi, dengan konfirmasi
+     * terlebih dahulu.
+     */
+    private void hapusEvent() {
+ 
+        String idStr = tfIdEvent.getText().trim();
+ 
+        if (idStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Pilih dulu data yang ingin dihapus (klik baris tabel, atau ketik Id Event lalu Enter).",
+                    "Input Tidak Valid",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+ 
+        int idEvent;
+        try {
+            idEvent = Integer.parseInt(idStr);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Id Event harus berupa angka!",
+                    "Input Tidak Valid",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+ 
+        int konfirmasi = JOptionPane.showConfirmDialog(this,
+                "Yakin ingin menghapus event dengan Id " + idEvent + "?",
+                "Konfirmasi Hapus",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+ 
+        if (konfirmasi != JOptionPane.YES_OPTION) {
+            return; // user membatalkan
+        }
+ 
+        boolean berhasil = eventBazarDAO.delete(idEvent);
+ 
+        if (berhasil) {
+            JOptionPane.showMessageDialog(this,
+                    "Event bazar berhasil dihapus!",
+                    "Berhasil",
+                    JOptionPane.INFORMATION_MESSAGE);
+            loadTableData();
+            clearFields();
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Gagal menghapus event bazar. Pastikan Id Event tersebut ada.",
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+ 
+    /**
+     * Cari event berdasarkan Id Event (dipanggil saat user menekan Enter
+     * di field tfIdEvent), lalu auto-isi field lainnya untuk Edit/Hapus.
+     */
+    private void cariEventById() {
+ 
+        String idStr = tfIdEvent.getText().trim();
+ 
+        if (idStr.isEmpty()) {
+            return;
+        }
+ 
+        int idEvent;
+        try {
+            idEvent = Integer.parseInt(idStr);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Id Event harus berupa angka!",
+                    "Input Tidak Valid",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+ 
+        EventBazar event = eventBazarDAO.getEventById(idEvent);
+ 
+        if (event == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Event dengan Id " + idEvent + " tidak ditemukan.",
+                    "Data Tidak Ditemukan",
+                    JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+ 
+        tfNamaEvent.setText(event.getNamaEvent());
+        tfLokasi.setText(event.getLokasi());
+        tfTanggalEvent.setText(dateFormat.format(event.getTanggalMulai()));
+    }
     private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
         // TODO add your handling code here:
+        tambahEvent();
+        btnTambah.setSelected(false); 
+        
     }//GEN-LAST:event_btnTambahActionPerformed
 
     private void tfIdEventActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfIdEventActionPerformed
         // TODO add your handling code here:
+        cariEventById();
     }//GEN-LAST:event_tfIdEventActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         // TODO add your handling code here:
+        editEvent();
+        btnEdit.setSelected(false);
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         // TODO add your handling code here:
+        hapusEvent();
+        btnHapus.setSelected(false);
     }//GEN-LAST:event_btnHapusActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
         // TODO add your handling code here:
+        clearFields();
+        btnReset.setSelected(false);
     }//GEN-LAST:event_btnResetActionPerformed
 
     /**
