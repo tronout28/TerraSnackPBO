@@ -38,21 +38,36 @@ public class DetailPesananForm extends javax.swing.JFrame {
     /**
      * Creates new form DetailPesananForm
      */
-    public DetailPesananForm() {
-        initComponents();
-        model = (DefaultTableModel) JDetail.getModel();
+   public DetailPesananForm() {
+    initComponents();
+    model = (DefaultTableModel) JDetail.getModel();
 
-        loadPesanan();
-        loadProduk();
-        loadVarian();
-        loadTable();
+    loadPesanan();
+    loadProduk();
+    loadVarian();
+    loadTable();
 
-        JDetail.getSelectionModel().addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) {
-                pilihData();
-            }
-        });
-    }
+    JDetail.getSelectionModel().addListSelectionListener(e -> {
+        if (!e.getValueIsAdjusting()) {
+            pilihData();
+        }
+    });
+    
+    // Auto-calculate subtotal when qty or harga changes
+    JQty.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+        public void insertUpdate(javax.swing.event.DocumentEvent e) { hitungSubtotal(); }
+        public void removeUpdate(javax.swing.event.DocumentEvent e) { hitungSubtotal(); }
+        public void changedUpdate(javax.swing.event.DocumentEvent e) { hitungSubtotal(); }
+    });
+    
+    JHargasatuan.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+        public void insertUpdate(javax.swing.event.DocumentEvent e) { hitungSubtotal(); }
+        public void removeUpdate(javax.swing.event.DocumentEvent e) { hitungSubtotal(); }
+        public void changedUpdate(javax.swing.event.DocumentEvent e) { hitungSubtotal(); }
+    });
+}
+    
+    
 
     private void loadPesanan() {
 
@@ -101,15 +116,15 @@ public class DetailPesananForm extends javax.swing.JFrame {
 
         for (DetailPesanan dp : detailDAO.getAll()) {
 
-            model.addRow(new Object[] {
-                    no++,
-                    dp.getDetailId(),
-                    dp.getPesananId(),
-                    dp.getProdukId(),
-                    dp.getVarianId(),
-                    dp.getQty(),
-                    dp.getHargaSatuan(),
-                    dp.getSubtotal()
+            model.addRow(new Object[]{
+                no++,
+                dp.getDetailId(),
+                dp.getPesananId(),
+                dp.getProdukId(),
+                dp.getVarianId(),
+                dp.getQty(),
+                dp.getHargaSatuan(),
+                dp.getSubtotal()
             });
         }
     }
@@ -120,48 +135,47 @@ public class DetailPesananForm extends javax.swing.JFrame {
         JHargasatuan.setText("");
         JSubtotal.setText("");
         JCatatan.setText("");
-
         selectedId = -1;
-
         JDetail.clearSelection();
     }
 
     private void hitungSubtotal() {
-
         try {
-
-            int qty = Integer.parseInt(JQty.getText());
-
-            BigDecimal harga = new BigDecimal(JHargasatuan.getText());
-
-            BigDecimal subtotal = harga.multiply(BigDecimal.valueOf(qty));
-
-            JSubtotal.setText(subtotal.toString());
-
+            if (!JQty.getText().isEmpty() && !JHargasatuan.getText().isEmpty()) {
+                int qty = Integer.parseInt(JQty.getText());
+                BigDecimal harga = new BigDecimal(JHargasatuan.getText());
+                BigDecimal subtotal = harga.multiply(BigDecimal.valueOf(qty));
+                JSubtotal.setText(subtotal.toString());
+            }
         } catch (Exception e) {
-
+            // Ignore parsing errors
         }
     }
 
     private void pilihData() {
-
         int row = JDetail.getSelectedRow();
 
         if (row == -1) {
             return;
         }
 
-        selectedId = Integer.parseInt(
-                model.getValueAt(row, 1).toString());
+        try {
+            selectedId = Integer.parseInt(model.getValueAt(row, 1).toString());
 
-        JQty.setText(
-                model.getValueAt(row, 5).toString());
+            // Load data from selected row
+            JQty.setText(model.getValueAt(row, 5).toString());
+            JHargasatuan.setText(model.getValueAt(row, 6).toString());
+            JSubtotal.setText(model.getValueAt(row, 7).toString());
 
-        JHargasatuan.setText(
-                model.getValueAt(row, 6).toString());
+            // Get catatan from database
+            DetailPesanan dp = detailDAO.getById(selectedId);
+            if (dp != null && dp.getCatatan() != null) {
+                JCatatan.setText((String) dp.getCatatan());
+            }
 
-        JSubtotal.setText(
-                model.getValueAt(row, 7).toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -399,77 +413,132 @@ public class DetailPesananForm extends javax.swing.JFrame {
     }// GEN-LAST:event_JProdukActionPerformed
 
     private void JRefreshActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_JRefreshActionPerformed
-        // TODO add your handling code here:
         loadTable();
-        clearForm();
+        resetForm();
+        JOptionPane.showMessageDialog(this, "Data berhasil di-refresh!");
     }// GEN-LAST:event_JRefreshActionPerformed
 
     private void JHapusActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_JHapusActionPerformed
-        // TODO add your handling code here:
         if (selectedId == -1) {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Pilih data terlebih dahulu");
-
+            JOptionPane.showMessageDialog(this, "Pilih data yang akan dihapus dari tabel!");
             return;
         }
 
-        if (detailDAO.delete(selectedId)) {
+        int konfirmasi = JOptionPane.showConfirmDialog(
+                this,
+                "Apakah Anda yakin ingin menghapus data ini?",
+                "Konfirmasi Hapus",
+                JOptionPane.YES_NO_OPTION
+        );
 
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Data berhasil dihapus");
-
-            loadTable();
-            clearForm();
+        if (konfirmasi == JOptionPane.YES_OPTION) {
+            if (detailDAO.delete(selectedId)) {
+                JOptionPane.showMessageDialog(this, "Data berhasil dihapus!");
+                loadTable();
+                resetForm();
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal menghapus data!");
+            }
         }
     }// GEN-LAST:event_JHapusActionPerformed
 
     private void JUpdateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_JUpdateActionPerformed
-        // TODO add your handling code here:
+        if (selectedId == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih data yang akan diupdate dari tabel!");
+            return;
+        }
+
+        try {
+            if (JProduk.getSelectedItem() == null || JParian.getSelectedItem() == null) {
+                JOptionPane.showMessageDialog(this, "Produk dan Varian harus dipilih!");
+                return;
+            }
+
+            if (JQty.getText().isEmpty() || JHargasatuan.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Qty dan Harga Satuan harus diisi!");
+                return;
+            }
+
+            ComboItem produk = (ComboItem) JProduk.getSelectedItem();
+            ComboItem varian = (ComboItem) JParian.getSelectedItem();
+
+            int qty = Integer.parseInt(JQty.getText());
+            BigDecimal harga = new BigDecimal(JHargasatuan.getText());
+            BigDecimal subtotal = harga.multiply(BigDecimal.valueOf(qty));
+
+            DetailPesanan dp = detailDAO.getById(selectedId);
+            if (dp == null) {
+                JOptionPane.showMessageDialog(this, "Data tidak ditemukan!");
+                return;
+            }
+
+            dp.setProdukId(produk.getId());
+            dp.setVarianId(varian.getId());
+            dp.setQty(qty);
+            dp.setHargaSatuan(harga);
+            dp.setSubtotal(subtotal);
+            dp.setCatatan(JCatatan.getText().isEmpty() ? null : JCatatan.getText());
+
+            if (detailDAO.update(dp)) {
+                JOptionPane.showMessageDialog(this, "Data berhasil diupdate!");
+                loadTable();
+                resetForm();
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal mengupdate data!");
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Qty dan Harga harus berupa angka!");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+            e.printStackTrace();
+        }
     }// GEN-LAST:event_JUpdateActionPerformed
 
     private void JTambahActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_JTambahActionPerformed
         // TODO add your handling code here:
         try {
+            // Validasi input
+            if (JPesanan.getSelectedItem() == null || JProduk.getSelectedItem() == null || JParian.getSelectedItem() == null) {
+                JOptionPane.showMessageDialog(this, "Semua field harus dipilih!");
+                return;
+            }
+
+            if (JQty.getText().isEmpty() || JHargasatuan.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Qty dan Harga Satuan harus diisi!");
+                return;
+            }
 
             ComboItem pesanan = (ComboItem) JPesanan.getSelectedItem();
-
             ComboItem produk = (ComboItem) JProduk.getSelectedItem();
-
             ComboItem varian = (ComboItem) JParian.getSelectedItem();
 
-            DetailPesanan dp = new DetailPesanan();
+            int qty = Integer.parseInt(JQty.getText());
+            BigDecimal harga = new BigDecimal(JHargasatuan.getText());
+            BigDecimal subtotal = harga.multiply(BigDecimal.valueOf(qty));
 
+            DetailPesanan dp = new DetailPesanan();
             dp.setPesananId(pesanan.getId());
             dp.setProdukId(produk.getId());
             dp.setVarianId(varian.getId());
-
-            dp.setQty(Integer.parseInt(JQty.getText()));
-
-            BigDecimal harga = new BigDecimal(JHargasatuan.getText());
-
+            dp.setQty(qty);
             dp.setHargaSatuan(harga);
-
-            dp.setSubtotal(
-                    new BigDecimal(JSubtotal.getText()));
+            dp.setSubtotal(subtotal);
+            dp.setCatatan(JCatatan.getText().isEmpty() ? null : JCatatan.getText());
 
             if (detailDAO.insert(dp)) {
-
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Data berhasil ditambahkan");
-
+                JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan!");
                 loadTable();
-                clearForm();
+                resetForm();
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal menambahkan data!");
             }
 
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Qty dan Harga harus berupa angka!");
         } catch (Exception e) {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+            e.printStackTrace();
         }
     }// GEN-LAST:event_JTambahActionPerformed
 
@@ -518,4 +587,8 @@ public class DetailPesananForm extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
+
+    private void resetForm() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
