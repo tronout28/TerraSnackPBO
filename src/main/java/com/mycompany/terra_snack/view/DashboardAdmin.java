@@ -902,15 +902,10 @@ public class DashboardAdmin extends javax.swing.JFrame {
     }// GEN-LAST:event_btnDashboardActionPerformed
 
     private void btnProdukActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnProdukActionPerformed
-        JOptionPane.showMessageDialog(
-                this,
-                "Form Produk belum tersedia.",
-                "Informasi",
-                JOptionPane.INFORMATION_MESSAGE);
-        // ProdukForm form = new ProdukForm();
-        // form.setVisible(true);
-        // form.setLocationRelativeTo(null);
-        // this.dispose();
+        ProdukForm form = new ProdukForm();
+        form.setVisible(true);
+        form.setLocationRelativeTo(null);
+        this.dispose();
     }// GEN-LAST:event_btnProdukActionPerformed
 
     private void btnLaporanActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnLaporanActionPerformed
