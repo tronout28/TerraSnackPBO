@@ -18,33 +18,140 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
 
 public class TrackingPesananForm extends javax.swing.JFrame {
+
+    private DefaultTableModel tableModel;
+    private int selectedPesananId = -1;
+    private String selectedKodePesanan = "";
 
     public TrackingPesananForm() {
         initComponents();
         setLocationRelativeTo(null);
+        initTable();
+        loadTabelPesanan();
         initProgressLabels();
     }
 
-    // Inisialisasi label progress bar
-    private void initProgressLabels() {
-        // Set default color untuk semua label progress
-        lblPemPending.setForeground(new Color(117, 117, 117)); // Abu-abu
-        lblVerifikasi.setForeground(new Color(117, 117, 117));
-        lblProses.setForeground(new Color(117, 117, 117));
-        lblSelesai.setForeground(new Color(117, 117, 117));
+    // Inisialisasi tabel pesanan
+    private void initTable() {
+        String[] kolom = {"ID Pesanan", "Kode Pesanan", "Nama Pelanggan", "Tanggal", "Total", "Status"};
+        tableModel = new DefaultTableModel(kolom, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Table read-only
+            }
+        };
 
-        // Set font
-        Font font = new Font("Poppins", Font.PLAIN, 12);
-        lblPemPending.setFont(font);
-        lblVerifikasi.setFont(font);
-        lblProses.setFont(font);
-        lblSelesai.setFont(font);
+        TPesanan.setModel(tableModel);
+        TPesanan.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        TPesanan.setRowHeight(35);
+        TPesanan.getTableHeader().setBackground(new Color(227, 242, 253));
+        TPesanan.getTableHeader().setFont(new Font("Poppins", Font.BOLD, 12));
+        TPesanan.setFont(new Font("Poppins", Font.PLAIN, 11));
+
+        // Event listener untuk klik baris tabel
+        TPesanan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
     }
 
-    // Method untuk load detail pesanan dari database
-    private void loadDetailPesanan(String keyword) {
+    // Load semua pesanan ke tabel
+    private void loadTabelPesanan() {
+        tableModel.setRowCount(0);
+
+        String sql = "SELECT ps.pesanan_id, ps.kode_pesanan, pl.nama, "
+                + "ps.tanggal_pesanan, ps.total_harga, ps.status_pesanan "
+                + "FROM pesanan ps "
+                + "JOIN pelanggan pl ON ps.pelanggan_id = pl.pelanggan_id "
+                + "ORDER BY ps.tanggal_pesanan DESC";
+
+        try (Connection conn = DatabaseConnection.getConnection(); java.sql.Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Object[] row = {
+                    rs.getInt("pesanan_id"),
+                    rs.getString("kode_pesanan"),
+                    rs.getString("nama"),
+                    rs.getTimestamp("tanggal_pesanan"),
+                    "Rp " + String.format("%,d", (int) rs.getDouble("total_harga")),
+                    formatStatus(rs.getString("status_pesanan"))
+                };
+                tableModel.addRow(row);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error load data: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    // Search/filter tabel
+    private void searchTabel() {
+        String keyword = txtCari.getText().trim();
+
+        if (keyword.isEmpty()) {
+            loadTabelPesanan();
+            return;
+        }
+
+        tableModel.setRowCount(0);
+
+        String sql = "SELECT ps.pesanan_id, ps.kode_pesanan, pl.nama, "
+                + "ps.tanggal_pesanan, ps.total_harga, ps.status_pesanan "
+                + "FROM pesanan ps "
+                + "JOIN pelanggan pl ON ps.pelanggan_id = pl.pelanggan_id "
+                + "WHERE ps.kode_pesanan LIKE ? OR pl.nama LIKE ? "
+                + "ORDER BY ps.tanggal_pesanan DESC";
+
+        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, "%" + keyword + "%");
+            pstmt.setString(2, "%" + keyword + "%");
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Object[] row = {
+                    rs.getInt("pesanan_id"),
+                    rs.getString("kode_pesanan"),
+                    rs.getString("nama"),
+                    rs.getTimestamp("tanggal_pesanan"),
+                    "Rp " + String.format("%,d", (int) rs.getDouble("total_harga")),
+                    formatStatus(rs.getString("status_pesanan"))
+                };
+                tableModel.addRow(row);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error mencari data: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Event handler saat klik baris tabel
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
+        int selectedRow = TPesanan.getSelectedRow();
+
+        if (selectedRow == -1) {
+            return;
+        }
+
+        // Ambil data dari baris yang dipilih
+        selectedPesananId = (int) tableModel.getValueAt(selectedRow, 0);
+        selectedKodePesanan = (String) tableModel.getValueAt(selectedRow, 1);
+
+        // Load detail pesanan
+        loadDetailPesanan(selectedKodePesanan);
+    }
+
+    // Load detail pesanan ke panel atas
+    private void loadDetailPesanan(String kodePesanan) {
         // Clear semua label dulu
         lblOrderId.setText("Order ID: -");
         lblCustomer.setText("Customer: -");
@@ -53,14 +160,10 @@ public class TrackingPesananForm extends javax.swing.JFrame {
         lblTotal.setText("Total: -");
         lblNote.setText("Note: -");
 
-        // Reset progress bar ke default (semua kosong)
+        // Reset progress bar
         resetProgressIndicator();
 
-        if (keyword.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "Masukkan ID atau kode pesanan!",
-                    "Peringatan",
-                    JOptionPane.WARNING_MESSAGE);
+        if (kodePesanan == null || kodePesanan.trim().isEmpty()) {
             return;
         }
 
@@ -70,24 +173,20 @@ public class TrackingPesananForm extends javax.swing.JFrame {
                 + "ps.total_harga, ps.catatan, ps.status_pesanan "
                 + "FROM pesanan ps "
                 + "JOIN pelanggan pl ON ps.pelanggan_id = pl.pelanggan_id "
-                + "WHERE ps.kode_pesanan = ? OR CAST(ps.pesanan_id AS CHAR) = ?";
+                + "WHERE ps.kode_pesanan = ?";
 
         try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, keyword);
-            pstmt.setString(2, keyword);
-
+            pstmt.setString(1, kodePesanan);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                // Ambil data dari database
-                String kodePesanan = rs.getString("kode_pesanan");
                 String namaCustomer = rs.getString("nama");
                 Timestamp tanggalPesanan = rs.getTimestamp("tanggal_pesanan");
                 String metode = rs.getString("metode_fulfillment");
                 double totalHarga = rs.getDouble("total_harga");
                 String catatan = rs.getString("catatan");
-                String status = rs.getString("status_pesanan");  // ← STATUS DARI DB
+                String status = rs.getString("status_pesanan");
 
                 // Tampilkan ke JLabel
                 lblOrderId.setText("Order ID: " + kodePesanan);
@@ -102,31 +201,56 @@ public class TrackingPesananForm extends javax.swing.JFrame {
                 lblTotal.setText("Total: Rp " + String.format("%,d", (int) totalHarga));
                 lblNote.setText("Note: " + (catatan.isEmpty() ? "-" : catatan));
 
-                // PENTING: Update progress indicator berdasarkan status dari database
-                updateProgressIndicator(status);  // ← INI HARUS DIPANGGIL
+                // Update progress indicator
+                updateProgressIndicator(status);
 
                 // Set combo box ke status saat ini
                 setComboBoxStatus(status);
 
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "Pesanan tidak ditemukan!",
-                        "Info",
-                        JOptionPane.INFORMATION_MESSAGE);
             }
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,
-                    "Error: " + e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+                    "Error load detail: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
 
-    // Method untuk update progress indicator (bullet points)
+    // Format status untuk tabel
+    private String formatStatus(String status) {
+        switch (status) {
+            case "MENUNGGU_PEMBAYARAN":
+                return "Menunggu Pembayaran";
+            case "MENUNGGU_VERIFIKASI":
+                return "Menunggu Verifikasi";
+            case "DIPROSES":
+                return "Diproses";
+            case "SIAP":
+                return "Siap";
+            case "SELESAI":
+                return "Selesai";
+            case "DITOLAK":
+                return "Ditolak";
+            default:
+                return status;
+        }
+    }
+
+    // Inisialisasi label progress bar
+    private void initProgressLabels() {
+        Font font = new Font("Poppins", Font.PLAIN, 12);
+        lblPemPending.setFont(font);
+        lblVerifikasi.setFont(font);
+        lblProses.setFont(font);
+        lblSelesai.setFont(font);
+
+        resetProgressIndicator();
+    }
+
+    // Method untuk update progress indicator
     private void updateProgressIndicator(String status) {
-        // RESET SEMUA KE DEFAULT (belum dicapai)
+        // Reset semua ke default
         lblPemPending.setText("○ Menunggu Pembayaran");
         lblPemPending.setForeground(new Color(189, 189, 189));
 
@@ -142,7 +266,6 @@ public class TrackingPesananForm extends javax.swing.JFrame {
         Font fontBold = new Font("Poppins", Font.BOLD, 12);
         Font fontNormal = new Font("Poppins", Font.PLAIN, 12);
 
-        // UPDATE BERDASARKAN STATUS DARI DATABASE
         switch (status) {
             case "MENUNGGU_PEMBAYARAN":
                 lblPemPending.setText("● Menunggu Pembayaran");
@@ -209,10 +332,16 @@ public class TrackingPesananForm extends javax.swing.JFrame {
                 lblSelesai.setForeground(new Color(76, 175, 80));
                 lblSelesai.setFont(fontBold);
                 break;
+
+            case "DITOLAK":
+                lblPemPending.setText("✗ Menunggu Pembayaran");
+                lblPemPending.setForeground(new Color(244, 67, 54));
+                lblPemPending.setFont(fontBold);
+                break;
         }
     }
 
-    // Method untuk reset progress indicator
+    // Reset progress indicator
     private void resetProgressIndicator() {
         Font fontNormal = new Font("Poppins", Font.PLAIN, 12);
 
@@ -233,7 +362,7 @@ public class TrackingPesananForm extends javax.swing.JFrame {
         lblSelesai.setFont(fontNormal);
     }
 
-    // Method untuk set combo box sesuai status database
+    // Set combo box sesuai status database
     private void setComboBoxStatus(String statusDB) {
         switch (statusDB) {
             case "MENUNGGU_PEMBAYARAN":
@@ -254,15 +383,12 @@ public class TrackingPesananForm extends javax.swing.JFrame {
         }
     }
 
-    // Method untuk update status pesanan
+    // Update status pesanan
     private void updateStatusPesanan() {
-        String kodePesanan = lblOrderId.getText().replace("Order ID: ", "");
-
-        if (kodePesanan.equals("-")) {
+        if (selectedKodePesanan == null || selectedKodePesanan.equals("")) {
             JOptionPane.showMessageDialog(this,
-                    "Tidak ada pesanan yang dipilih!",
-                    "Peringatan",
-                    JOptionPane.WARNING_MESSAGE);
+                    "Pilih pesanan dari tabel terlebih dahulu!",
+                    "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -270,9 +396,8 @@ public class TrackingPesananForm extends javax.swing.JFrame {
         String statusDB = convertToDatabaseValue(statusBaruText);
 
         int konfirmasi = JOptionPane.showConfirmDialog(this,
-                "Update status pesanan " + kodePesanan + " menjadi " + statusBaruText + "?",
-                "Konfirmasi",
-                JOptionPane.YES_NO_OPTION);
+                "Update status pesanan " + selectedKodePesanan + " menjadi " + statusBaruText + "?",
+                "Konfirmasi", JOptionPane.YES_NO_OPTION);
 
         if (konfirmasi == JOptionPane.YES_OPTION) {
             try {
@@ -280,25 +405,24 @@ public class TrackingPesananForm extends javax.swing.JFrame {
                 Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql);
                 pstmt.setString(1, statusDB);
-                pstmt.setString(2, kodePesanan);
+                pstmt.setString(2, selectedKodePesanan);
 
                 int rowsAffected = pstmt.executeUpdate();
 
                 if (rowsAffected > 0) {
                     JOptionPane.showMessageDialog(this,
                             "Status berhasil diupdate!",
-                            "Sukses",
-                            JOptionPane.INFORMATION_MESSAGE);
+                            "Sukses", JOptionPane.INFORMATION_MESSAGE);
 
-                    // Reload data untuk refresh tampilan
-                    loadDetailPesanan(kodePesanan);
+                    // Refresh tabel dan detail
+                    loadTabelPesanan();
+                    loadDetailPesanan(selectedKodePesanan);
                 }
 
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this,
                         "Error update status: " + e.getMessage(),
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                        "Error", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             }
         }
@@ -332,6 +456,15 @@ public class TrackingPesananForm extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        btnDashboard = new javax.swing.JButton();
+        btnPesanan = new javax.swing.JButton();
+        btnLaporan = new javax.swing.JButton();
+        btnPengguna = new javax.swing.JButton();
+        btnVerifikasi = new javax.swing.JButton();
+        btnEvent = new javax.swing.JButton();
+        btnTracking = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        btnProduk = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         lblOrderId = new javax.swing.JLabel();
         lblDate = new javax.swing.JLabel();
@@ -349,20 +482,101 @@ public class TrackingPesananForm extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         btnUpdate = new javax.swing.JButton();
         cbUpdate = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TPesanan = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(11, 45, 107));
 
+        btnDashboard.setBackground(new java.awt.Color(11, 45, 107));
+        btnDashboard.setForeground(new java.awt.Color(255, 255, 255));
+        btnDashboard.setText("Dashboard");
+        btnDashboard.addActionListener(this::btnDashboardActionPerformed);
+
+        btnPesanan.setBackground(new java.awt.Color(11, 45, 107));
+        btnPesanan.setForeground(new java.awt.Color(255, 255, 255));
+        btnPesanan.setText("Pesanan");
+        btnPesanan.addActionListener(this::btnPesananActionPerformed);
+
+        btnLaporan.setBackground(new java.awt.Color(11, 45, 107));
+        btnLaporan.setForeground(new java.awt.Color(255, 255, 255));
+        btnLaporan.setText("Laporan");
+        btnLaporan.addActionListener(this::btnLaporanActionPerformed);
+
+        btnPengguna.setBackground(new java.awt.Color(11, 45, 107));
+        btnPengguna.setForeground(new java.awt.Color(255, 255, 255));
+        btnPengguna.setText("Pengguna");
+        btnPengguna.addActionListener(this::btnPenggunaActionPerformed);
+
+        btnVerifikasi.setBackground(new java.awt.Color(11, 45, 107));
+        btnVerifikasi.setForeground(new java.awt.Color(255, 255, 255));
+        btnVerifikasi.setText("Verifikasi");
+        btnVerifikasi.addActionListener(this::btnVerifikasiActionPerformed);
+
+        btnEvent.setBackground(new java.awt.Color(11, 45, 107));
+        btnEvent.setForeground(new java.awt.Color(255, 255, 255));
+        btnEvent.setText("Event");
+        btnEvent.addActionListener(this::btnEventActionPerformed);
+
+        btnTracking.setBackground(new java.awt.Color(11, 45, 107));
+        btnTracking.setForeground(new java.awt.Color(255, 255, 255));
+        btnTracking.setText("Tracking");
+        btnTracking.addActionListener(this::btnTrackingActionPerformed);
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Terra Snack");
+
+        btnProduk.setBackground(new java.awt.Color(11, 45, 107));
+        btnProduk.setForeground(new java.awt.Color(255, 255, 255));
+        btnProduk.setText("Produk");
+        btnProduk.addActionListener(this::btnProdukActionPerformed);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 163, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(48, 48, 48)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btnTracking, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnEvent, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnVerifikasi, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnLaporan, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnPengguna, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnProduk, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnPesanan, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnDashboard, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addComponent(jLabel1)))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(47, 47, 47)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(btnDashboard)
+                .addGap(27, 27, 27)
+                .addComponent(btnPesanan)
+                .addGap(28, 28, 28)
+                .addComponent(btnProduk)
+                .addGap(29, 29, 29)
+                .addComponent(btnLaporan)
+                .addGap(27, 27, 27)
+                .addComponent(btnPengguna)
+                .addGap(29, 29, 29)
+                .addComponent(btnVerifikasi)
+                .addGap(29, 29, 29)
+                .addComponent(btnEvent)
+                .addGap(32, 32, 32)
+                .addComponent(btnTracking)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -504,35 +718,60 @@ public class TrackingPesananForm extends javax.swing.JFrame {
                 .addContainerGap(17, Short.MAX_VALUE))
         );
 
+        TPesanan.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Kode Pesanan", "Nama Pelanggan", "Tanggal", "Status"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(TPesanan);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(80, 80, 80)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                .addGap(184, 184, 184)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 563, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 113, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 177, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(48, 48, 48)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(36, 36, 36)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(194, 194, 194))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(16, 16, 16))
         );
 
         pack();
@@ -540,8 +779,7 @@ public class TrackingPesananForm extends javax.swing.JFrame {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         // TODO add your handling code here:
-        String keyword = txtCari.getText().trim();
-        loadDetailPesanan(keyword);
+        searchTabel();
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void cbUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbUpdateActionPerformed
@@ -552,6 +790,80 @@ public class TrackingPesananForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         updateStatusPesanan();
     }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnDashboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDashboardActionPerformed
+        // TODO add your handling code here:
+        try {
+            this.dispose(); // Tutup form Tracking saat ini untuk membebaskan memori
+            new DashboardAdmin().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Dashboard: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnDashboardActionPerformed
+
+    private void btnVerifikasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerifikasiActionPerformed
+        // TODO add your handling code here:
+        try {
+            this.dispose();
+            new FormUploadPembayaran().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Verifikasi: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnVerifikasiActionPerformed
+
+    private void btnPesananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesananActionPerformed
+        // TODO add your handling code here:
+        try {
+            this.dispose();
+            new PesananForm().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Pesanan: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnPesananActionPerformed
+
+    private void btnProdukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdukActionPerformed
+        // TODO add your handling code here:
+        try {
+            this.dispose();
+            new ProdukForm().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Produk: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnProdukActionPerformed
+
+    private void btnLaporanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLaporanActionPerformed
+        // TODO add your handling code here:
+        try {
+            this.dispose();
+            new LaporanPenjualanFormFrame().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Laporan: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnLaporanActionPerformed
+
+    private void btnPenggunaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPenggunaActionPerformed
+        // TODO add your handling code here:
+        try {
+            this.dispose();
+            new PelangganForm().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Pengguna: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnPenggunaActionPerformed
+
+    private void btnEventActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEventActionPerformed
+        // TODO add your handling code here:
+        try {
+            this.dispose();
+            new EventBazarFormFrame().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Event: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnEventActionPerformed
+
+    private void btnTrackingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrackingActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnTrackingActionPerformed
 
     /**
      * @param args the command line arguments
@@ -579,13 +891,24 @@ public class TrackingPesananForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable TPesanan;
+    private javax.swing.JButton btnDashboard;
+    private javax.swing.JButton btnEvent;
+    private javax.swing.JButton btnLaporan;
+    private javax.swing.JButton btnPengguna;
+    private javax.swing.JButton btnPesanan;
+    private javax.swing.JButton btnProduk;
     private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnTracking;
     private javax.swing.JButton btnUpdate;
+    private javax.swing.JButton btnVerifikasi;
     private javax.swing.JComboBox<String> cbUpdate;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCustomer;
     private javax.swing.JLabel lblDate;
     private javax.swing.JLabel lblMethod;
