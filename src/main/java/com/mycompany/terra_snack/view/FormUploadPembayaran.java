@@ -42,9 +42,6 @@ public class FormUploadPembayaran extends javax.swing.JFrame {
             }
         };
 
-        // Asumsi: tabel Anda bernama jTable1 atau buat baru
-        // Jika belum ada jTable1 di GUI, Anda perlu drag JTable dari palette
-        // dan taruh di jPanel3 dengan JScrollPane
         tPembayaran.setModel(tableModel);
         tPembayaran.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tPembayaran.setRowHeight(35);
@@ -53,9 +50,7 @@ public class FormUploadPembayaran extends javax.swing.JFrame {
         tPembayaran.setFont(new java.awt.Font("Poppins", java.awt.Font.PLAIN, 11));
     }
 
-    // Load data pembayaran yang MENUNGGU dari database
     private void loadPembayaran() {
-        // Clear tabel dulu
         tableModel.setRowCount(0);
 
         // SQL Query JOIN 3 tabel: pembayaran, pesanan, pelanggan
@@ -258,6 +253,15 @@ public class FormUploadPembayaran extends javax.swing.JFrame {
     private void initComponents() {
 
         sideBarP = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        btnDashboard = new javax.swing.JButton();
+        btnPesanan = new javax.swing.JButton();
+        btnPorduk = new javax.swing.JButton();
+        btnLaporan = new javax.swing.JButton();
+        btnPengguna = new javax.swing.JButton();
+        btnVerifikasi = new javax.swing.JButton();
+        btnEvent = new javax.swing.JButton();
+        btnTracking = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tPembayaran = new javax.swing.JTable();
@@ -273,15 +277,95 @@ public class FormUploadPembayaran extends javax.swing.JFrame {
 
         sideBarP.setBackground(new java.awt.Color(11, 45, 107));
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Terra Snack");
+
+        btnDashboard.setBackground(new java.awt.Color(11, 45, 107));
+        btnDashboard.setForeground(new java.awt.Color(255, 255, 255));
+        btnDashboard.setText("Dahboard");
+        btnDashboard.addActionListener(this::btnDashboardActionPerformed);
+
+        btnPesanan.setBackground(new java.awt.Color(11, 45, 107));
+        btnPesanan.setForeground(new java.awt.Color(255, 255, 255));
+        btnPesanan.setText("Pesanan");
+        btnPesanan.addActionListener(this::btnPesananActionPerformed);
+
+        btnPorduk.setBackground(new java.awt.Color(11, 45, 107));
+        btnPorduk.setForeground(new java.awt.Color(255, 255, 255));
+        btnPorduk.setText("Produk");
+        btnPorduk.addActionListener(this::btnPordukActionPerformed);
+
+        btnLaporan.setBackground(new java.awt.Color(11, 45, 107));
+        btnLaporan.setForeground(new java.awt.Color(255, 255, 255));
+        btnLaporan.setText("Laporan");
+        btnLaporan.addActionListener(this::btnLaporanActionPerformed);
+
+        btnPengguna.setBackground(new java.awt.Color(11, 45, 107));
+        btnPengguna.setForeground(new java.awt.Color(255, 255, 255));
+        btnPengguna.setText("Pengguna");
+        btnPengguna.addActionListener(this::btnPenggunaActionPerformed);
+
+        btnVerifikasi.setBackground(new java.awt.Color(11, 45, 107));
+        btnVerifikasi.setForeground(new java.awt.Color(255, 255, 255));
+        btnVerifikasi.setText("Verifikasi");
+        btnVerifikasi.addActionListener(this::btnVerifikasiActionPerformed);
+
+        btnEvent.setBackground(new java.awt.Color(11, 45, 107));
+        btnEvent.setForeground(new java.awt.Color(255, 255, 255));
+        btnEvent.setText("Event");
+        btnEvent.addActionListener(this::btnEventActionPerformed);
+
+        btnTracking.setBackground(new java.awt.Color(11, 45, 107));
+        btnTracking.setForeground(new java.awt.Color(255, 255, 255));
+        btnTracking.setText("Tracking");
+        btnTracking.addActionListener(this::btnTrackingActionPerformed);
+
         javax.swing.GroupLayout sideBarPLayout = new javax.swing.GroupLayout(sideBarP);
         sideBarP.setLayout(sideBarPLayout);
         sideBarPLayout.setHorizontalGroup(
             sideBarPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 169, Short.MAX_VALUE)
+            .addGroup(sideBarPLayout.createSequentialGroup()
+                .addGroup(sideBarPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(sideBarPLayout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addComponent(jLabel1))
+                    .addGroup(sideBarPLayout.createSequentialGroup()
+                        .addGap(57, 57, 57)
+                        .addGroup(sideBarPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnDashboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnPesanan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnPorduk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(sideBarPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(btnTracking, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnEvent, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnVerifikasi, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnPengguna, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnLaporan, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
         sideBarPLayout.setVerticalGroup(
             sideBarPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(sideBarPLayout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(jLabel1)
+                .addGap(31, 31, 31)
+                .addComponent(btnDashboard)
+                .addGap(29, 29, 29)
+                .addComponent(btnPesanan)
+                .addGap(27, 27, 27)
+                .addComponent(btnPorduk)
+                .addGap(28, 28, 28)
+                .addComponent(btnLaporan)
+                .addGap(27, 27, 27)
+                .addComponent(btnPengguna)
+                .addGap(27, 27, 27)
+                .addComponent(btnVerifikasi)
+                .addGap(28, 28, 28)
+                .addComponent(btnEvent)
+                .addGap(26, 26, 26)
+                .addComponent(btnTracking)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
@@ -350,7 +434,7 @@ public class FormUploadPembayaran extends javax.swing.JFrame {
                 .addComponent(sideBarP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 320, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(bQris)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bSetuju, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -358,7 +442,7 @@ public class FormUploadPembayaran extends javax.swing.JFrame {
                         .addComponent(bTolak, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(47, 47, 47))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(76, 76, 76)
+                        .addGap(57, 57, 57)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
@@ -367,7 +451,7 @@ public class FormUploadPembayaran extends javax.swing.JFrame {
                                 .addComponent(tfPencarian, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(bCari)))))
-                .addContainerGap(76, Short.MAX_VALUE))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -415,6 +499,80 @@ public class FormUploadPembayaran extends javax.swing.JFrame {
         lihatBuktiQRIS();
     }//GEN-LAST:event_bQrisActionPerformed
 
+    private void btnTrackingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrackingActionPerformed
+        // TODO add your handling code here:
+        try {
+            this.dispose();
+            new TrackingPesananForm().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Tracking: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnTrackingActionPerformed
+
+    private void btnDashboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDashboardActionPerformed
+        // TODO add your handling code here:
+        try {
+            this.dispose(); // Tutup form Tracking saat ini untuk membebaskan memori
+            new DashboardAdmin().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Dashboard: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnDashboardActionPerformed
+
+    private void btnPesananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesananActionPerformed
+        // TODO add your handling code here:
+        try {
+            this.dispose();
+            new PesananForm().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Pesanan: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnPesananActionPerformed
+
+    private void btnPordukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPordukActionPerformed
+        // TODO add your handling code here:
+        try {
+            this.dispose();
+            new ProdukForm().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Produk: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnPordukActionPerformed
+
+    private void btnLaporanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLaporanActionPerformed
+        // TODO add your handling code here:
+        try {
+            this.dispose();
+            new LaporanPenjualanFormFrame().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Laporan: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnLaporanActionPerformed
+
+    private void btnPenggunaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPenggunaActionPerformed
+        // TODO add your handling code here:
+        try {
+            this.dispose();
+            new PelangganForm().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Pengguna: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnPenggunaActionPerformed
+
+    private void btnVerifikasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerifikasiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnVerifikasiActionPerformed
+
+    private void btnEventActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEventActionPerformed
+        // TODO add your handling code here:
+        try {
+            this.dispose();
+            new EventBazarFormFrame().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Event: " + e.getMessage());
+        }
+    }//GEN-LAST:event_btnEventActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -432,7 +590,7 @@ public class FormUploadPembayaran extends javax.swing.JFrame {
                 }
             }
         } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            
+
         }
         //</editor-fold>
 
@@ -445,6 +603,15 @@ public class FormUploadPembayaran extends javax.swing.JFrame {
     private javax.swing.JButton bQris;
     private javax.swing.JButton bSetuju;
     private javax.swing.JButton bTolak;
+    private javax.swing.JButton btnDashboard;
+    private javax.swing.JButton btnEvent;
+    private javax.swing.JButton btnLaporan;
+    private javax.swing.JButton btnPengguna;
+    private javax.swing.JButton btnPesanan;
+    private javax.swing.JButton btnPorduk;
+    private javax.swing.JButton btnTracking;
+    private javax.swing.JButton btnVerifikasi;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
