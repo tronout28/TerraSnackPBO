@@ -48,7 +48,7 @@ public class ProdukForm extends javax.swing.JFrame {
             List<com.mycompany.terra_snack.model.VarianProduk> listVarian = produkDAO.getVarianByProduk(p.getProdukId());
             for (com.mycompany.terra_snack.model.VarianProduk v : listVarian) {
                 Object[] rowVarian = {
-                    v.getVarianId(),
+                    v.getVarianId(), // REVISI: Menampilkan ID asli Varian dari database
                     p.getNamaProduk() + " - " + v.getNamaVarian(),
                     p.getHarga(),
                     v.getStokVarian(),
@@ -58,24 +58,46 @@ public class ProdukForm extends javax.swing.JFrame {
                 model.addRow(rowVarian);
             }
         }
+
+        aturLebarKolomOtomatis(tblProduk);
     }
 
     private void aturLebarKolomOtomatis(javax.swing.JTable table) {
-        table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        for (int column = 0; column < table.getColumnCount(); column++) {
-            int lebarKolom = 50;
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+            int totalLebarKonten = 0;
+            int[] lebarKolomArray = new int[table.getColumnCount()];
 
-            javax.swing.table.TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
-            java.awt.Component headerComp = headerRenderer.getTableCellRendererComponent(table, table.getColumnName(column), false, false, 0, column);
-            lebarKolom = Math.max(headerComp.getPreferredSize().width + 15, lebarKolom);
+            for (int column = 0; column < table.getColumnCount(); column++) {
+                int lebarKolom = 50;
 
-            for (int row = 0; row < table.getRowCount(); row++) {
-                javax.swing.table.TableCellRenderer renderer = table.getCellRenderer(row, column);
-                java.awt.Component comp = table.prepareRenderer(renderer, row, column);
-                lebarKolom = Math.max(comp.getPreferredSize().width + 15, lebarKolom);
+                javax.swing.table.TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
+                java.awt.Component headerComp = headerRenderer.getTableCellRendererComponent(table, table.getColumnName(column), false, false, 0, column);
+                lebarKolom = Math.max(headerComp.getPreferredSize().width + 15, lebarKolom);
+
+                for (int row = 0; row < table.getRowCount(); row++) {
+                    javax.swing.table.TableCellRenderer renderer = table.getCellRenderer(row, column);
+                    java.awt.Component comp = table.prepareRenderer(renderer, row, column);
+                    lebarKolom = Math.max(comp.getPreferredSize().width + 15, lebarKolom);
+                }
+                lebarKolomArray[column] = lebarKolom;
+                totalLebarKonten += lebarKolom;
             }
-            table.getColumnModel().getColumn(column).setPreferredWidth(lebarKolom);
-        }
+
+            int lebarViewport = table.getParent() != null ? table.getParent().getWidth() : 0;
+
+            if (totalLebarKonten < lebarViewport) {
+
+                table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+            } else {
+
+                table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+            }
+
+            for (int column = 0; column < table.getColumnCount(); column++) {
+                table.getColumnModel().getColumn(column).setPreferredWidth(lebarKolomArray[column]);
+            }
+        });
     }
 
     /**
@@ -109,6 +131,8 @@ public class ProdukForm extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         tfCari = new javax.swing.JTextField();
         btnCari = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        tfVarian = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         btnDashboard = new javax.swing.JButton();
         btnSubPromo = new javax.swing.JButton();
@@ -228,6 +252,14 @@ public class ProdukForm extends javax.swing.JFrame {
             }
         });
 
+        jLabel9.setText("Nama Varian(Kalau ada) :");
+
+        tfVarian.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfVarianActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -235,26 +267,25 @@ public class ProdukForm extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 586, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(57, 57, 57)
-                                .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2))
-                                .addGap(34, 34, 34)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(tfHarga)
-                                    .addComponent(tfNama)
-                                    .addComponent(tfStok)
-                                    .addComponent(tfMinOrder)
-                                    .addComponent(cbStatus, 0, 100, Short.MAX_VALUE))))
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tfId)
+                            .addComponent(tfStok)
+                            .addComponent(tfMinOrder)
+                            .addComponent(cbStatus, 0, 160, Short.MAX_VALUE)
+                            .addComponent(tfVarian)
+                            .addComponent(tfNama)
+                            .addComponent(tfHarga))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel7)
                         .addGap(18, 18, 18)
@@ -262,18 +293,15 @@ public class ProdukForm extends javax.swing.JFrame {
                             .addComponent(tfCari)
                             .addComponent(btnCari, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnTambah)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnEdit)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnHapus)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnRefresh)))
+                        .addComponent(btnTambah)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnEdit)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnHapus)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnRefresh)
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -289,6 +317,10 @@ public class ProdukForm extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(tfNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCari))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(tfVarian, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(5, 5, 5)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -363,15 +395,14 @@ public class ProdukForm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))))
@@ -390,12 +421,17 @@ public class ProdukForm extends javax.swing.JFrame {
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         loadDataToTable();
+
         tfId.setText("");
         tfNama.setText("");
+        tfVarian.setText("");
         tfHarga.setText("");
         tfStok.setText("");
         tfMinOrder.setText("");
         tfCari.setText("");
+        cbStatus.setSelectedIndex(0);
+
+        tfNama.setEditable(true);
     }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void tfMinOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfMinOrderActionPerformed
@@ -412,69 +448,152 @@ public class ProdukForm extends javax.swing.JFrame {
 
     private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
         if (tfNama.getText().isEmpty() || tfHarga.getText().isEmpty() || tfStok.getText().isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Semua inputan wajib diisi!");
+            javax.swing.JOptionPane.showMessageDialog(this, "Nama Produk, Harga, dan Stok wajib diisi!");
             return;
         }
-        Produk p = new Produk();
-        p.setNamaProduk(tfNama.getText());
-        p.setHarga(Double.parseDouble(tfHarga.getText()));
-        p.setStok(Integer.parseInt(tfStok.getText()));
-        p.setMinimalOrder(Integer.parseInt(tfMinOrder.getText()));
-        p.setStatusProduk(cbStatus.getSelectedItem().toString());
-        p.setGambarProduk("");
 
-        if (produkDAO.insertProduk(p)) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Produk berhasil ditambahkan!");
-            loadDataToTable();
-            tfId.setText("");
-            tfNama.setText("");
-            tfHarga.setText("");
-            tfStok.setText("");
-            tfMinOrder.setText("");
+        String namaInput = tfNama.getText().trim();
+        String varianInput = tfVarian.getText().trim();
+
+        for (int i = 0; i < tblProduk.getRowCount(); i++) {
+            String namaDiTabel = tblProduk.getValueAt(i, 1).toString();
+
+            if (!varianInput.isEmpty()) {
+                String formatGabung = namaInput + " - " + varianInput;
+                if (namaDiTabel.equalsIgnoreCase(formatGabung)) {
+                    javax.swing.JOptionPane.showMessageDialog(this,
+                            "Error: Varian '" + varianInput + "' sudah ada di produk '" + namaInput + "'!",
+                            "Data Duplikat", javax.swing.JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            } else {
+                if (namaDiTabel.equalsIgnoreCase(namaInput)) {
+                    javax.swing.JOptionPane.showMessageDialog(this,
+                            "Error: Produk Utama '" + namaInput + "' sudah terdaftar!",
+                            "Data Duplikat", javax.swing.JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+        }
+
+        if (!varianInput.isEmpty()) {
+
+            int idInduk = -1;
+            for (int i = 0; i < tblProduk.getRowCount(); i++) {
+                String namaDiTabel = tblProduk.getValueAt(i, 1).toString();
+                if (!namaDiTabel.contains(" - ") && namaDiTabel.equalsIgnoreCase(namaInput)) {
+                    idInduk = Integer.parseInt(tblProduk.getValueAt(i, 0).toString());
+                    break;
+                }
+            }
+
+            if (idInduk == -1) {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                        "Error: Produk utama '" + namaInput + "' tidak ditemukan!\nSilahkan tambah produk utama terlebih dahulu.",
+                        "Induk Tidak Ditemukan", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            com.mycompany.terra_snack.model.VarianProduk v = new com.mycompany.terra_snack.model.VarianProduk();
+            v.setProdukId(idInduk);
+            v.setNamaVarian(varianInput);
+            v.setStokVarian(Integer.parseInt(tfStok.getText()));
+
+            if (produkDAO.insertVarian(v)) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Varian rasa baru berhasil ditambahkan!");
+                btnRefreshActionPerformed(evt);
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Gagal menambahkan varian!");
+            }
         } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Gagal menambah data!");
+            Produk p = new Produk();
+            p.setNamaProduk(namaInput);
+            p.setHarga(Double.parseDouble(tfHarga.getText()));
+            p.setStok(Integer.parseInt(tfStok.getText()));
+            p.setMinimalOrder(Integer.parseInt(tfMinOrder.getText()));
+            p.setStatusProduk(cbStatus.getSelectedItem().toString());
+            p.setGambarProduk("");
+
+            if (produkDAO.insertProduk(p)) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Produk utama berhasil ditambahkan!");
+                btnRefreshActionPerformed(evt);
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Gagal menambahkan produk utama!");
+            }
         }
     }//GEN-LAST:event_btnTambahActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         if (tfId.getText().isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Pilih produk dari tabel terlebih dahulu!");
+            javax.swing.JOptionPane.showMessageDialog(this, "Pilih data dari tabel terlebih dahulu!");
             return;
         }
-        Produk p = new Produk();
-        p.setProdukId(Integer.parseInt(tfId.getText()));
-        p.setNamaProduk(tfNama.getText());
-        p.setHarga(Double.parseDouble(tfHarga.getText()));
-        p.setStok(Integer.parseInt(tfStok.getText()));
-        p.setMinimalOrder(Integer.parseInt(tfMinOrder.getText()));
-        p.setStatusProduk(cbStatus.getSelectedItem().toString());
-        p.setGambarProduk("");
 
-        if (produkDAO.updateProduk(p)) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Produk berhasil diperbarui!");
-            loadDataToTable();
+        int id = Integer.parseInt(tfId.getText());
+        int row = tblProduk.getSelectedRow();
+        String namaLengkapDiTabel = tblProduk.getValueAt(row, 1).toString();
+
+        if (namaLengkapDiTabel.contains(" - ")) {
+            com.mycompany.terra_snack.model.VarianProduk v = new com.mycompany.terra_snack.model.VarianProduk();
+            v.setVarianId(id);
+            v.setNamaVarian(tfVarian.getText().trim());
+            v.setStokVarian(Integer.parseInt(tfStok.getText()));
+
+            if (produkDAO.updateVarian(v)) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Varian rasa berhasil diperbarui!");
+                btnRefreshActionPerformed(evt);
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Gagal memperbarui data varian!");
+            }
         } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Gagal memperbarui data!");
+            Produk p = new Produk();
+            p.setProdukId(id);
+            p.setNamaProduk(tfNama.getText().trim());
+            p.setHarga(Double.parseDouble(tfHarga.getText()));
+            p.setStok(Integer.parseInt(tfStok.getText()));
+            p.setMinimalOrder(Integer.parseInt(tfMinOrder.getText()));
+            p.setStatusProduk(cbStatus.getSelectedItem().toString());
+            p.setGambarProduk("");
+
+            if (produkDAO.updateProduk(p)) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Produk utama berhasil diperbarui!");
+                btnRefreshActionPerformed(evt);
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Gagal memperbarui data produk utama!");
+            }
         }
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         if (tfId.getText().isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Pilih produk dari tabel terlebih dahulu!");
+            javax.swing.JOptionPane.showMessageDialog(this, "Pilih data dari tabel terlebih dahulu!");
             return;
         }
-        int konfirmasi = javax.swing.JOptionPane.showConfirmDialog(this, "Yakin ingin menghapus produk ini?", "Konfirmasi Hapus", javax.swing.JOptionPane.YES_NO_OPTION);
+
+        int id = Integer.parseInt(tfId.getText());
+        int row = tblProduk.getSelectedRow();
+        String namaLengkapDiTabel = tblProduk.getValueAt(row, 1).toString();
+
+        int konfirmasi = javax.swing.JOptionPane.showConfirmDialog(this,
+                "Yakin ingin menghapus data ini?", "Konfirmasi Hapus",
+                javax.swing.JOptionPane.YES_NO_OPTION);
+
         if (konfirmasi == javax.swing.JOptionPane.YES_OPTION) {
-            if (produkDAO.deleteProduk(Integer.parseInt(tfId.getText()))) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Produk berhasil dihapus!");
-                loadDataToTable();
-                tfId.setText("");
-                tfNama.setText("");
-                tfHarga.setText("");
-                tfStok.setText("");
-                tfMinOrder.setText("");
+            if (namaLengkapDiTabel.contains(" - ")) {
+                if (produkDAO.deleteVarian(id)) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Varian rasa berhasil dihapus!");
+                    btnRefreshActionPerformed(evt);
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Gagal menghapus data varian!");
+                }
             } else {
-                javax.swing.JOptionPane.showMessageDialog(this, "Gagal menghapus data!");
+                if (produkDAO.deleteProduk(id)) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Produk utama berhasil dihapus!");
+                    btnRefreshActionPerformed(evt);
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(this,
+                            "Gagal menghapus Produk Utama!\nPastikan semua varian rasa di bawah produk ini sudah dihapus terlebih dahulu.");
+                }
             }
         }
     }//GEN-LAST:event_btnHapusActionPerformed
@@ -482,23 +601,65 @@ public class ProdukForm extends javax.swing.JFrame {
     private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tblProduk.getModel();
         model.setRowCount(0);
-        List<Produk> list = produkDAO.searchProduk(tfCari.getText());
+
+        String keyword = tfCari.getText().trim();
+
+        List<Produk> list = produkDAO.searchProduk(keyword);
         for (Produk p : list) {
-            Object[] row = {p.getProdukId(), p.getNamaProduk(), p.getHarga(), p.getStok(), p.getMinimalOrder(), p.getStatusProduk()};
+            Object[] row = {
+                p.getProdukId(),
+                p.getNamaProduk(),
+                p.getHarga(),
+                p.getStok(),
+                p.getMinimalOrder(),
+                p.getStatusProduk()
+            };
             model.addRow(row);
+
+            List<com.mycompany.terra_snack.model.VarianProduk> listVarian = produkDAO.getVarianByProduk(p.getProdukId());
+            for (com.mycompany.terra_snack.model.VarianProduk v : listVarian) {
+                Object[] rowVarian = {
+                    v.getVarianId(),
+                    p.getNamaProduk() + " - " + v.getNamaVarian(),
+                    p.getHarga(),
+                    v.getStokVarian(),
+                    p.getMinimalOrder(),
+                    "Aktif"
+                };
+                model.addRow(rowVarian);
+            }
         }
+
+        aturLebarKolomOtomatis(tblProduk);
     }//GEN-LAST:event_btnCariActionPerformed
 
     private void tblProdukMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProdukMouseClicked
 
         int row = tblProduk.getSelectedRow();
         if (row != -1) {
-            tfId.setText(tblProduk.getValueAt(row, 0).toString());
-            tfNama.setText(tblProduk.getValueAt(row, 1).toString());
-            tfHarga.setText(tblProduk.getValueAt(row, 2).toString());
-            tfStok.setText(tblProduk.getValueAt(row, 3).toString());
-            tfMinOrder.setText(tblProduk.getValueAt(row, 4).toString());
-            cbStatus.setSelectedItem(tblProduk.getValueAt(row, 5).toString());
+            String idStr = tblProduk.getValueAt(row, 0).toString();
+            String namaLengkap = tblProduk.getValueAt(row, 1).toString();
+            String hargaStr = tblProduk.getValueAt(row, 2).toString();
+            String stokStr = tblProduk.getValueAt(row, 3).toString();
+            String minOrderStr = tblProduk.getValueAt(row, 4).toString();
+            String statusStr = tblProduk.getValueAt(row, 5).toString();
+
+            tfId.setText(idStr);
+            tfHarga.setText(hargaStr);
+            tfStok.setText(stokStr);
+            tfMinOrder.setText(minOrderStr);
+            cbStatus.setSelectedItem(statusStr);
+
+            if (namaLengkap.contains(" - ")) {
+                String[] pecahNama = namaLengkap.split(" - ");
+                tfNama.setText(pecahNama[0]);
+                tfVarian.setText(pecahNama[1]);
+                tfNama.setEditable(false);
+            } else {
+                tfNama.setText(namaLengkap);
+                tfVarian.setText("");
+                tfNama.setEditable(true);
+            }
         }
     }//GEN-LAST:event_tblProdukMouseClicked
 
@@ -515,6 +676,10 @@ public class ProdukForm extends javax.swing.JFrame {
         form.setLocationRelativeTo(null);
         this.dispose();
     }//GEN-LAST:event_btnSubPromoActionPerformed
+
+    private void tfVarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfVarianActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfVarianActionPerformed
 
     /**
      * @param args the command line arguments
@@ -568,6 +733,7 @@ public class ProdukForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
@@ -578,5 +744,6 @@ public class ProdukForm extends javax.swing.JFrame {
     private javax.swing.JTextField tfMinOrder;
     private javax.swing.JTextField tfNama;
     private javax.swing.JTextField tfStok;
+    private javax.swing.JTextField tfVarian;
     // End of variables declaration//GEN-END:variables
 }
