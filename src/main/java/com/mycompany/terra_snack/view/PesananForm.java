@@ -73,6 +73,7 @@ public class PesananForm extends javax.swing.JFrame {
         CPesanan = new javax.swing.JComboBox<>();
         CPengambilan = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
+        JDetail = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         JPesanan = new javax.swing.JTable();
         JUpdate = new javax.swing.JButton();
@@ -80,11 +81,20 @@ public class PesananForm extends javax.swing.JFrame {
         JHapus = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        btnDashboard = new javax.swing.JButton();
+        btnPesanan = new javax.swing.JButton();
+        btnProduk = new javax.swing.JButton();
+        btnLaporan = new javax.swing.JButton();
+        btnPengguna = new javax.swing.JButton();
+        btnVerivikasi = new javax.swing.JButton();
+        btnEvent = new javax.swing.JButton();
+        btnTracking = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel1.setText("Nama Pelanggan :");
+        jLabel1.setText("ID Pelanggan :");
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Tipe Pesanan :");
@@ -112,6 +122,9 @@ public class PesananForm extends javax.swing.JFrame {
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel7.setText("Pengambilan :");
 
+        JDetail.setText("Detail Pesanan");
+        JDetail.addActionListener(this::JDetailActionPerformed);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -136,7 +149,9 @@ public class PesananForm extends javax.swing.JFrame {
                     .addComponent(JHarga)
                     .addComponent(CPesanan, 0, 151, Short.MAX_VALUE)
                     .addComponent(CPengambilan, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(746, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(JDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,14 +170,19 @@ public class PesananForm extends javax.swing.JFrame {
                     .addComponent(CPengambilan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(JCatatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(JHarga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(JCatatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(JHarga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(JDetail, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
+                        .addGap(1, 1, 1)))
+                .addGap(21, 21, 21))
         );
 
         JPesanan.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
@@ -171,11 +191,11 @@ public class PesananForm extends javax.swing.JFrame {
 
             },
             new String [] {
-                "NO", "ID Pesanan", "Kode Pesanan", "ID Pelanggan", "Jenis Pesanan", "Tanggal Pesanan", "Status Pelaksanaan Pesanan", "Catatan", "Total Harga", "Status Pesanan", "Detail Pesanan"
+                "NO", "ID Pesanan", "Kode Pesanan", "ID Pelanggan", "Jenis Pesanan", "Tanggal Pesanan", "Status Pelaksanaan Pesanan", "Catatan", "Total Harga", "Status Pesanan"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, true
+                false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -205,15 +225,110 @@ public class PesananForm extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(0, 102, 204));
 
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setText("Terra Snack");
+
+        btnDashboard.setBackground(new java.awt.Color(11, 45, 107));
+        btnDashboard.setForeground(new java.awt.Color(255, 255, 255));
+        btnDashboard.setText("Dashboard");
+        btnDashboard.setBorderPainted(false);
+        btnDashboard.setFocusPainted(false);
+        btnDashboard.addActionListener(this::btnDashboardActionPerformed);
+
+        btnPesanan.setBackground(new java.awt.Color(11, 45, 107));
+        btnPesanan.setForeground(new java.awt.Color(255, 255, 255));
+        btnPesanan.setText("Pesanan");
+        btnPesanan.setBorderPainted(false);
+        btnPesanan.setFocusPainted(false);
+        btnPesanan.addActionListener(this::btnPesananActionPerformed);
+
+        btnProduk.setBackground(new java.awt.Color(11, 45, 107));
+        btnProduk.setForeground(new java.awt.Color(255, 255, 255));
+        btnProduk.setText("Produk");
+        btnProduk.setBorderPainted(false);
+        btnProduk.setFocusPainted(false);
+        btnProduk.addActionListener(this::btnProdukActionPerformed);
+
+        btnLaporan.setBackground(new java.awt.Color(11, 45, 107));
+        btnLaporan.setForeground(new java.awt.Color(255, 255, 255));
+        btnLaporan.setText("Laporan");
+        btnLaporan.setBorderPainted(false);
+        btnLaporan.setFocusPainted(false);
+        btnLaporan.addActionListener(this::btnLaporanActionPerformed);
+
+        btnPengguna.setBackground(new java.awt.Color(11, 45, 107));
+        btnPengguna.setForeground(new java.awt.Color(255, 255, 255));
+        btnPengguna.setText("Pengguna");
+        btnPengguna.setBorderPainted(false);
+        btnPengguna.setFocusPainted(false);
+        btnPengguna.addActionListener(this::btnPenggunaActionPerformed);
+
+        btnVerivikasi.setBackground(new java.awt.Color(11, 45, 107));
+        btnVerivikasi.setForeground(new java.awt.Color(255, 255, 255));
+        btnVerivikasi.setText("Verifikasi ");
+        btnVerivikasi.setBorderPainted(false);
+        btnVerivikasi.setFocusPainted(false);
+        btnVerivikasi.addActionListener(this::btnVerivikasiActionPerformed);
+
+        btnEvent.setBackground(new java.awt.Color(11, 45, 107));
+        btnEvent.setForeground(new java.awt.Color(255, 255, 255));
+        btnEvent.setText("Event");
+        btnEvent.setBorderPainted(false);
+        btnEvent.setFocusPainted(false);
+        btnEvent.addActionListener(this::btnEventActionPerformed);
+
+        btnTracking.setBackground(new java.awt.Color(11, 45, 107));
+        btnTracking.setForeground(new java.awt.Color(255, 255, 255));
+        btnTracking.setText("Tracking");
+        btnTracking.setBorderPainted(false);
+        btnTracking.setFocusPainted(false);
+        btnTracking.addActionListener(this::btnTrackingActionPerformed);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 166, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(19, Short.MAX_VALUE)
+                .addComponent(jLabel12)
+                .addContainerGap())
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnTracking, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(btnEvent, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnLaporan, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnProduk, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnPesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnDashboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnPengguna, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnVerivikasi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(44, 44, 44)
+                .addComponent(jLabel12)
+                .addGap(79, 79, 79)
+                .addComponent(btnDashboard)
+                .addGap(18, 18, 18)
+                .addComponent(btnPesanan)
+                .addGap(18, 18, 18)
+                .addComponent(btnProduk)
+                .addGap(18, 18, 18)
+                .addComponent(btnLaporan)
+                .addGap(18, 18, 18)
+                .addComponent(btnPengguna)
+                .addGap(18, 18, 18)
+                .addComponent(btnVerivikasi)
+                .addGap(18, 18, 18)
+                .addComponent(btnEvent)
+                .addGap(18, 18, 18)
+                .addComponent(btnTracking)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -239,7 +354,7 @@ public class PesananForm extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(22, 22, 22)
                         .addComponent(jLabel6)))
-                .addContainerGap(132, Short.MAX_VALUE))
+                .addContainerGap(142, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -255,7 +370,7 @@ public class PesananForm extends javax.swing.JFrame {
                     .addComponent(JUpdate)
                     .addComponent(JTambah)
                     .addComponent(JHapus))
-                .addContainerGap(72, Short.MAX_VALUE))
+                .addContainerGap(69, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -288,6 +403,93 @@ public class PesananForm extends javax.swing.JFrame {
     private void JTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JTambahActionPerformed
         tambahPesanan();
     }//GEN-LAST:event_JTambahActionPerformed
+
+    private void btnDashboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDashboardActionPerformed
+// TODO add your handling code here:
+        try {
+            this.dispose(); // Tutup form Tracking saat ini untuk membebaskan memori
+            new DashboardAdmin().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Dashboard: " + e.getMessage());
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_btnDashboardActionPerformed
+
+    private void btnPesananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesananActionPerformed
+        // TODO add your handling code here:
+        try {
+            this.dispose();
+            new PesananForm().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Pesanan: " + e.getMessage());
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPesananActionPerformed
+
+    private void btnProdukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdukActionPerformed
+        // TODO add your handling code here:
+        try {
+            this.dispose();
+            new ProdukForm().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Produk: " + e.getMessage());
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_btnProdukActionPerformed
+
+    private void btnLaporanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLaporanActionPerformed
+        // TODO add your handling code here:
+        try {
+            this.dispose();
+            new LaporanPenjualanFormFrame().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Laporan: " + e.getMessage());
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_btnLaporanActionPerformed
+
+    private void btnPenggunaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPenggunaActionPerformed
+// TODO add your handling code here:
+        try {
+            this.dispose();
+            new PelangganForm().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Pengguna: " + e.getMessage());
+        }    }//GEN-LAST:event_btnPenggunaActionPerformed
+
+    private void btnVerivikasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerivikasiActionPerformed
+// TODO add your handling code here:
+        try {
+            this.dispose();
+            new FormUploadPembayaran().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Pengguna: " + e.getMessage());
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_btnVerivikasiActionPerformed
+
+    private void btnEventActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEventActionPerformed
+// TODO add your handling code here:
+        try {
+            this.dispose();
+            new EventBazarFormFrame().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Event: " + e.getMessage());
+        }    }//GEN-LAST:event_btnEventActionPerformed
+
+    private void btnTrackingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrackingActionPerformed
+ // TODO add your handling code here:
+        try {
+            this.dispose();
+            new TrackingPesananForm().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Tracking: " + e.getMessage());
+        }    }//GEN-LAST:event_btnTrackingActionPerformed
+
+    private void JDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JDetailActionPerformed
+        try {
+            this.dispose();
+            new DetailPesananForm().setVisible(true);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal membuka Detail Pesanan: " + e.getMessage());
+        }
+        
+    }//GEN-LAST:event_JDetailActionPerformed
 
     private void loadPesananData() {
         // Clear table
@@ -573,12 +775,12 @@ public class PesananForm extends javax.swing.JFrame {
             }
         }
     }
-    
-     private String generateKodePesanan() {
+
+    private String generateKodePesanan() {
         // Generate kode pesanan format: TRX + timestamp
         return "TRX" + System.currentTimeMillis() % 1000000;
     }
-    
+
     private void clearForm() {
         JPelanggan.setText("");
         JCatatan.setText("");
@@ -618,13 +820,23 @@ public class PesananForm extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> CPengambilan;
     private javax.swing.JComboBox<String> CPesanan;
     private javax.swing.JTextField JCatatan;
+    private javax.swing.JButton JDetail;
     private javax.swing.JButton JHapus;
     private javax.swing.JTextField JHarga;
     private javax.swing.JTextField JPelanggan;
     private javax.swing.JTable JPesanan;
     private javax.swing.JButton JTambah;
     private javax.swing.JButton JUpdate;
+    private javax.swing.JButton btnDashboard;
+    private javax.swing.JButton btnEvent;
+    private javax.swing.JButton btnLaporan;
+    private javax.swing.JButton btnPengguna;
+    private javax.swing.JButton btnPesanan;
+    private javax.swing.JButton btnProduk;
+    private javax.swing.JButton btnTracking;
+    private javax.swing.JButton btnVerivikasi;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
