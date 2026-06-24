@@ -27,6 +27,7 @@
               <Component id="jPanel7" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -49,6 +50,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jScrollPane1" min="-2" pref="698" max="-2" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -65,7 +67,7 @@
                               <Component id="tfTanggalSelesai" alignment="0" max="32767" attributes="0"/>
                               <Component id="tfTanggalMulai" alignment="0" max="32767" attributes="0"/>
                               <Component id="tfIdPromo" max="32767" attributes="0"/>
-                              <Component id="tfKodePrompo" alignment="0" max="32767" attributes="0"/>
+                              <Component id="tfKodePromo" alignment="0" max="32767" attributes="0"/>
                               <Component id="tfNamaPromo" alignment="0" max="32767" attributes="0"/>
                               <Component id="cbJenisDiskon" alignment="0" max="32767" attributes="0"/>
                               <Component id="tfNilaiDiskon" alignment="0" max="32767" attributes="0"/>
@@ -81,9 +83,8 @@
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="btnRefresh" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="jScrollPane1" alignment="0" min="-2" pref="613" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="14" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -98,7 +99,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="tfKodePrompo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tfKodePromo" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -213,7 +214,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="tfIdPromo">
         </Component>
-        <Component class="javax.swing.JTextField" name="tfKodePrompo">
+        <Component class="javax.swing.JTextField" name="tfKodePromo">
         </Component>
         <Component class="javax.swing.JTextField" name="tfNamaPromo">
         </Component>

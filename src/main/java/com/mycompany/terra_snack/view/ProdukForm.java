@@ -22,19 +22,59 @@ public class ProdukForm extends javax.swing.JFrame {
     public ProdukForm() {
         initComponents();
         loadDataToTable();
+        aturLebarKolomOtomatis(tblProduk);
         jPanel3.setBackground(new java.awt.Color(11, 45, 107));
         btnDashboard.setBackground(new java.awt.Color(37, 99, 235));
         btnDashboard.setForeground(java.awt.Color.WHITE);
-        
+
     }
 
     private void loadDataToTable() {
         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tblProduk.getModel();
         model.setRowCount(0);
-        List<Produk> list = produkDAO.getAllProduk();
-        for (Produk p : list) {
-            Object[] row = {p.getProdukId(), p.getNamaProduk(), p.getHarga(), p.getStok(), p.getMinimalOrder(), p.getStatusProduk()};
-            model.addRow(row);
+
+        List<com.mycompany.terra_snack.model.Produk> listProduk = produkDAO.getAllProduk();
+        for (com.mycompany.terra_snack.model.Produk p : listProduk) {
+            Object[] rowProduk = {
+                p.getProdukId(),
+                p.getNamaProduk(),
+                p.getHarga(),
+                p.getStok(),
+                p.getMinimalOrder(),
+                p.getStatusProduk()
+            };
+            model.addRow(rowProduk);
+
+            List<com.mycompany.terra_snack.model.VarianProduk> listVarian = produkDAO.getVarianByProduk(p.getProdukId());
+            for (com.mycompany.terra_snack.model.VarianProduk v : listVarian) {
+                Object[] rowVarian = {
+                    v.getVarianId(),
+                    p.getNamaProduk() + " - " + v.getNamaVarian(),
+                    p.getHarga(),
+                    v.getStokVarian(),
+                    p.getMinimalOrder(),
+                    "Aktif"
+                };
+                model.addRow(rowVarian);
+            }
+        }
+    }
+
+    private void aturLebarKolomOtomatis(javax.swing.JTable table) {
+        table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        for (int column = 0; column < table.getColumnCount(); column++) {
+            int lebarKolom = 50;
+
+            javax.swing.table.TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
+            java.awt.Component headerComp = headerRenderer.getTableCellRendererComponent(table, table.getColumnName(column), false, false, 0, column);
+            lebarKolom = Math.max(headerComp.getPreferredSize().width + 15, lebarKolom);
+
+            for (int row = 0; row < table.getRowCount(); row++) {
+                javax.swing.table.TableCellRenderer renderer = table.getCellRenderer(row, column);
+                java.awt.Component comp = table.prepareRenderer(renderer, row, column);
+                lebarKolom = Math.max(comp.getPreferredSize().width + 15, lebarKolom);
+            }
+            table.getColumnModel().getColumn(column).setPreferredWidth(lebarKolom);
         }
     }
 
@@ -71,7 +111,6 @@ public class ProdukForm extends javax.swing.JFrame {
         btnCari = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         btnDashboard = new javax.swing.JButton();
-        btnSubVarian = new javax.swing.JButton();
         btnSubPromo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -135,6 +174,8 @@ public class ProdukForm extends javax.swing.JFrame {
             }
         });
 
+        jScrollPane1.setToolTipText("");
+
         tblProduk.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null}
@@ -194,23 +235,19 @@ public class ProdukForm extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnTambah)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnEdit)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnHapus)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnRefresh)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnTambah)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnEdit)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnHapus))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addGap(57, 57, 57)
-                                .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(108, 108, 108)
-                                .addComponent(jLabel7))
+                                .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel5)
@@ -226,11 +263,15 @@ public class ProdukForm extends javax.swing.JFrame {
                                     .addComponent(tfMinOrder)
                                     .addComponent(cbStatus, 0, 100, Short.MAX_VALUE))))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tfCari)
-                            .addComponent(btnCari, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
-                        .addContainerGap(27, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(tfCari)
+                                    .addComponent(btnCari, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btnRefresh))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -283,13 +324,6 @@ public class ProdukForm extends javax.swing.JFrame {
             }
         });
 
-        btnSubVarian.setText("Varian Produk");
-        btnSubVarian.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSubVarianActionPerformed(evt);
-            }
-        });
-
         btnSubPromo.setText("Promo Diskon");
         btnSubPromo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -304,20 +338,17 @@ public class ProdukForm extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnSubPromo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnDashboard, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnSubVarian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnSubPromo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(btnDashboard, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(81, 81, 81)
+                .addGap(113, 113, 113)
                 .addComponent(btnDashboard)
-                .addGap(18, 18, 18)
-                .addComponent(btnSubVarian)
                 .addGap(18, 18, 18)
                 .addComponent(btnSubPromo)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -331,7 +362,7 @@ public class ProdukForm extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -476,13 +507,6 @@ public class ProdukForm extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnDashboardActionPerformed
 
-    private void btnSubVarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubVarianActionPerformed
-        VarianForm form = new VarianForm();
-        form.setVisible(true);
-        form.setLocationRelativeTo(null);
-        this.dispose();
-    }//GEN-LAST:event_btnSubVarianActionPerformed
-
     private void btnSubPromoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubPromoActionPerformed
         PromoForm form = new PromoForm();
         form.setVisible(true);
@@ -533,7 +557,6 @@ public class ProdukForm extends javax.swing.JFrame {
     private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnSubPromo;
-    private javax.swing.JButton btnSubVarian;
     private javax.swing.JButton btnTambah;
     private javax.swing.JComboBox<String> cbStatus;
     private javax.swing.JLabel jLabel1;
