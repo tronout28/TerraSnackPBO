@@ -19,6 +19,7 @@ public class DetailPesanan {
     private int qty;
     private BigDecimal hargaSatuan;
     private BigDecimal subtotal;
+    private String catatan;
 
     public DetailPesanan() {
     }
@@ -34,6 +35,7 @@ public class DetailPesanan {
         this.qty = qty;
         this.hargaSatuan = hargaSatuan;
         this.subtotal = subtotal;
+        this.catatan = catatan;
     }
 
     public int getDetailId() {
@@ -90,5 +92,15 @@ public class DetailPesanan {
 
     public void setSubtotal(BigDecimal subtotal) {
         this.subtotal = subtotal;
+    }
+
+    
+
+     public String getCatatan() {
+        return catatan;
+    }
+
+    public void setCatatan(String catatan) {
+        this.catatan = catatan;
     }
 }
