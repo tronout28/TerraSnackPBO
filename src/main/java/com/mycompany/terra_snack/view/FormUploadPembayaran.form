@@ -102,13 +102,11 @@
                               <Component id="btnDashboard" alignment="0" max="32767" attributes="0"/>
                               <Component id="btnPesanan" alignment="0" max="32767" attributes="0"/>
                               <Component id="btnPorduk" alignment="0" max="32767" attributes="0"/>
-                              <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="btnTracking" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="btnEvent" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="btnVerifikasi" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="btnPengguna" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="btnLaporan" alignment="0" max="32767" attributes="0"/>
-                              </Group>
+                              <Component id="btnTracking" alignment="0" max="32767" attributes="0"/>
+                              <Component id="btnEvent" alignment="0" max="32767" attributes="0"/>
+                              <Component id="btnVerifikasi" alignment="0" max="32767" attributes="0"/>
+                              <Component id="btnPengguna" alignment="0" max="32767" attributes="0"/>
+                              <Component id="btnLaporan" alignment="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
