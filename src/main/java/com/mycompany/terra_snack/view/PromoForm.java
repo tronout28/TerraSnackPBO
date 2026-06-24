@@ -35,21 +35,39 @@ public class PromoForm extends javax.swing.JFrame {
     }
 
     private void aturLebarKolomOtomatis(javax.swing.JTable table) {
-        table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        for (int column = 0; column < table.getColumnCount(); column++) {
-            int lebarKolom = 50;
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+            int totalLebarKonten = 0;
+            int[] lebarKolomArray = new int[table.getColumnCount()];
 
-            javax.swing.table.TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
-            java.awt.Component headerComp = headerRenderer.getTableCellRendererComponent(table, table.getColumnName(column), false, false, 0, column);
-            lebarKolom = Math.max(headerComp.getPreferredSize().width + 15, lebarKolom);
+            for (int column = 0; column < table.getColumnCount(); column++) {
+                int lebarKolom = 50;
 
-            for (int row = 0; row < table.getRowCount(); row++) {
-                javax.swing.table.TableCellRenderer renderer = table.getCellRenderer(row, column);
-                java.awt.Component comp = table.prepareRenderer(renderer, row, column);
-                lebarKolom = Math.max(comp.getPreferredSize().width + 15, lebarKolom);
+                javax.swing.table.TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
+                java.awt.Component headerComp = headerRenderer.getTableCellRendererComponent(table, table.getColumnName(column), false, false, 0, column);
+                lebarKolom = Math.max(headerComp.getPreferredSize().width + 15, lebarKolom);
+
+                for (int row = 0; row < table.getRowCount(); row++) {
+                    javax.swing.table.TableCellRenderer renderer = table.getCellRenderer(row, column);
+                    java.awt.Component comp = table.prepareRenderer(renderer, row, column);
+                    lebarKolom = Math.max(comp.getPreferredSize().width + 15, lebarKolom);
+                }
+                lebarKolomArray[column] = lebarKolom;
+                totalLebarKonten += lebarKolom;
             }
-            table.getColumnModel().getColumn(column).setPreferredWidth(lebarKolom);
-        }
+
+            int lebarViewport = table.getParent() != null ? table.getParent().getWidth() : 0;
+
+            if (totalLebarKonten < lebarViewport) {
+                table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+            } else {
+                table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+            }
+
+            for (int column = 0; column < table.getColumnCount(); column++) {
+                table.getColumnModel().getColumn(column).setPreferredWidth(lebarKolomArray[column]);
+            }
+        });
     }
 
     /**
