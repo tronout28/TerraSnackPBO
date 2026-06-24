@@ -31,6 +31,25 @@ public class PromoForm extends javax.swing.JFrame {
             Object[] row = {pr.getPromoId(), pr.getKodePromo(), pr.getNamaPromo(), pr.getJenisDiskon(), pr.getNilaiDiskon(), pr.getTanggalMulai(), pr.getTanggalSelesai(), pr.getStatus()};
             model.addRow(row);
         }
+        aturLebarKolomOtomatis(tblPromo);
+    }
+
+    private void aturLebarKolomOtomatis(javax.swing.JTable table) {
+        table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        for (int column = 0; column < table.getColumnCount(); column++) {
+            int lebarKolom = 50;
+
+            javax.swing.table.TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
+            java.awt.Component headerComp = headerRenderer.getTableCellRendererComponent(table, table.getColumnName(column), false, false, 0, column);
+            lebarKolom = Math.max(headerComp.getPreferredSize().width + 15, lebarKolom);
+
+            for (int row = 0; row < table.getRowCount(); row++) {
+                javax.swing.table.TableCellRenderer renderer = table.getCellRenderer(row, column);
+                java.awt.Component comp = table.prepareRenderer(renderer, row, column);
+                lebarKolom = Math.max(comp.getPreferredSize().width + 15, lebarKolom);
+            }
+            table.getColumnModel().getColumn(column).setPreferredWidth(lebarKolom);
+        }
     }
 
     /**
@@ -54,7 +73,7 @@ public class PromoForm extends javax.swing.JFrame {
         cbJenisDiskon = new javax.swing.JComboBox<>();
         cbStatusPromo = new javax.swing.JComboBox<>();
         tfIdPromo = new javax.swing.JTextField();
-        tfKodePrompo = new javax.swing.JTextField();
+        tfKodePromo = new javax.swing.JTextField();
         tfNamaPromo = new javax.swing.JTextField();
         tfNilaiDiskon = new javax.swing.JTextField();
         tfTanggalMulai = new javax.swing.JTextField();
@@ -155,6 +174,7 @@ public class PromoForm extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 698, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
@@ -170,7 +190,7 @@ public class PromoForm extends javax.swing.JFrame {
                             .addComponent(tfTanggalSelesai)
                             .addComponent(tfTanggalMulai)
                             .addComponent(tfIdPromo)
-                            .addComponent(tfKodePrompo)
+                            .addComponent(tfKodePromo)
                             .addComponent(tfNamaPromo)
                             .addComponent(cbJenisDiskon, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(tfNilaiDiskon)
@@ -182,9 +202,8 @@ public class PromoForm extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btnHapus)
                         .addGap(18, 18, 18)
-                        .addComponent(btnRefresh))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 613, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(14, Short.MAX_VALUE))
+                        .addComponent(btnRefresh)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -196,7 +215,7 @@ public class PromoForm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(tfKodePrompo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfKodePromo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -266,7 +285,8 @@ public class PromoForm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -280,13 +300,13 @@ public class PromoForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
-        if (tfKodePrompo.getText().isEmpty() || tfNamaPromo.getText().isEmpty() || tfNilaiDiskon.getText().isEmpty()) {
+        if (tfKodePromo.getText().isEmpty() || tfNamaPromo.getText().isEmpty() || tfNilaiDiskon.getText().isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Semua inputan wajib diisi!");
             return;
         }
 
         Promo pr = new Promo();
-        pr.setKodePromo(tfKodePrompo.getText());
+        pr.setKodePromo(tfKodePromo.getText());
         pr.setNamaPromo(tfNamaPromo.getText());
         pr.setJenisDiskon(cbJenisDiskon.getSelectedItem().toString());
         pr.setNilaiDiskon(Double.parseDouble(tfNilaiDiskon.getText()));
@@ -298,7 +318,7 @@ public class PromoForm extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Promo berhasil ditambahkan!");
             loadDataToTable();
             tfIdPromo.setText("");
-            tfKodePrompo.setText("");
+            tfKodePromo.setText("");
             tfNamaPromo.setText("");
             tfNilaiDiskon.setText("");
             tfTanggalMulai.setText("");
@@ -312,7 +332,7 @@ public class PromoForm extends javax.swing.JFrame {
         int row = tblPromo.getSelectedRow();
         if (row != -1) {
             tfIdPromo.setText(tblPromo.getValueAt(row, 0).toString());
-            tfKodePrompo.setText(tblPromo.getValueAt(row, 1).toString());
+            tfKodePromo.setText(tblPromo.getValueAt(row, 1).toString());
             tfNamaPromo.setText(tblPromo.getValueAt(row, 2).toString());
             cbJenisDiskon.setSelectedItem(tblPromo.getValueAt(row, 3).toString());
             tfNilaiDiskon.setText(tblPromo.getValueAt(row, 4).toString());
@@ -334,7 +354,7 @@ public class PromoForm extends javax.swing.JFrame {
                 javax.swing.JOptionPane.showMessageDialog(this, "Promo berhasil dihapus!");
                 loadDataToTable();
                 tfIdPromo.setText("");
-                tfKodePrompo.setText("");
+                tfKodePromo.setText("");
                 tfNamaPromo.setText("");
                 tfNilaiDiskon.setText("");
                 tfTanggalMulai.setText("");
@@ -348,7 +368,7 @@ public class PromoForm extends javax.swing.JFrame {
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         loadDataToTable();
         tfIdPromo.setText("");
-        tfKodePrompo.setText("");
+        tfKodePromo.setText("");
         tfNamaPromo.setText("");
         tfNilaiDiskon.setText("");
         tfTanggalMulai.setText("");
@@ -363,7 +383,7 @@ public class PromoForm extends javax.swing.JFrame {
 
         Promo pr = new Promo();
         pr.setPromoId(Integer.parseInt(tfIdPromo.getText()));
-        pr.setKodePromo(tfKodePrompo.getText());
+        pr.setKodePromo(tfKodePromo.getText());
         pr.setNamaPromo(tfNamaPromo.getText());
         pr.setJenisDiskon(cbJenisDiskon.getSelectedItem().toString());
         pr.setNilaiDiskon(Double.parseDouble(tfNilaiDiskon.getText()));
@@ -375,7 +395,7 @@ public class PromoForm extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Promo berhasil diperbarui!");
             loadDataToTable();
             tfIdPromo.setText("");
-            tfKodePrompo.setText("");
+            tfKodePromo.setText("");
             tfNamaPromo.setText("");
             tfNilaiDiskon.setText("");
             tfTanggalMulai.setText("");
@@ -449,7 +469,7 @@ public class PromoForm extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblPromo;
     private javax.swing.JTextField tfIdPromo;
-    private javax.swing.JTextField tfKodePrompo;
+    private javax.swing.JTextField tfKodePromo;
     private javax.swing.JTextField tfNamaPromo;
     private javax.swing.JTextField tfNilaiDiskon;
     private javax.swing.JTextField tfTanggalMulai;
